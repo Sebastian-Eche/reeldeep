@@ -7,8 +7,6 @@ public class HookController : MonoBehaviour
     public Camera mainCamera;
     private float currentY;
     public float descendSpeed = 2f;
-    private bool isStopped = false;
-    private bool isAccelerated = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,6 +19,8 @@ public class HookController : MonoBehaviour
         FollowMouse();
         if(Input.GetKeyDown(KeyCode.LeftShift)){
             AccelerateHook();
+        }else if(Input.GetKeyUp(KeyCode.LeftShift)){
+            descendSpeed = 2f;
         }
 
         if(Input.GetKeyDown(KeyCode.LeftControl)){
@@ -31,10 +31,11 @@ public class HookController : MonoBehaviour
     }
 
     void FollowMouse(){
-        mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, -10, 10);
         currentY -= descendSpeed * Time.deltaTime;
         transform.position = new Vector3(mouseWorldPosition.x, currentY, 0f);
+        // Debug.Log(transform.position);
     }
 
     void StopHook(){
@@ -43,5 +44,14 @@ public class HookController : MonoBehaviour
 
     void AccelerateHook(){
         descendSpeed *= 2.2f;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.TryGetComponent<Fish>(out Fish fish)){
+            fish.isHooked = true;
+            fish.HookFish();
+        }
+        // Debug.Log(other.gameObject.name + " is hooked");
     }
 }
