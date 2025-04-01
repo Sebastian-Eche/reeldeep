@@ -10,7 +10,6 @@ public class Minigame : MonoBehaviour
     private bool minigameStart = false;
     private bool continueRight = true;
     private SpriteRenderer hitSpot;
-
     private void OnEnable()
     {
         Fish.OnFishHooked += StartMinigame;
