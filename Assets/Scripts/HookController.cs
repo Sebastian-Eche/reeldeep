@@ -5,12 +5,12 @@ public class HookController : MonoBehaviour
 {
 
     public Camera mainCamera;
-    private float currentY;
+    private float startingY;
     public float descendSpeed = 2f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentY = transform.position.y;
+        startingY = transform.position.y;
     }
 
     // Update is called once per frame
@@ -33,8 +33,8 @@ public class HookController : MonoBehaviour
     void FollowMouse(){
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, -10, 10);
-        currentY -= descendSpeed * Time.deltaTime;
-        transform.position = new Vector3(mouseWorldPosition.x, currentY, 0f);
+        startingY -= descendSpeed * Time.deltaTime;
+        transform.position = new Vector3(mouseWorldPosition.x, startingY, 0f);
         // Debug.Log(transform.position);
     }
 
