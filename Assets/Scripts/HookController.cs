@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class HookController : MonoBehaviour
 {
-
     public Camera mainCamera;
     private float startingY;
     public float descendSpeed = 2f;
@@ -48,9 +47,12 @@ public class HookController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.TryGetComponent<Fish>(out Fish fish)){
-            fish.isHooked = true;
-            fish.HookFish();
+        if (!GameManager.Instance.fishOnHook){
+            if(other.gameObject.TryGetComponent<Fish>(out Fish fish)){
+                fish.isHooked = true;
+                fish.HookFish();
+                GameManager.Instance.fishOnHook = true;
+            }
         }
         // Debug.Log(other.gameObject.name + " is hooked");
     }
