@@ -112,7 +112,7 @@ public class Minigame : MonoBehaviour
     void ChangeHitSpot(){
         //changes the location of the hitspot somwhere in within the bounds of the border sprite
         float randomX = Random.Range(minX, maxX - 1f);
-        hitSpot.gameObject.transform.position = new Vector3(randomX, fishCurrHooked.transform.position.y, 0);
+        hitSpot.gameObject.transform.position = new Vector3(randomX, minigameBorder.transform.position.y, 0);
         ChangeSizeOfHitSpot();
         hitSpotMinX = hitSpot.bounds.min.x - hitSpotBuffer;
         hitSpotMaxX = hitSpot.bounds.max.x + hitSpotBuffer;

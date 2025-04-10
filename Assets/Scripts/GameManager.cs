@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set;}
     public CameraFollow cameraFollowObject;
     public HookController hookControllerObject;
-    private bool minigameStart = false;
+    public FishMovement fishMovementObject;
+    public bool minigameStart = false;
     public bool fishOnHook = false;
-    public Fish fishCurrHooked;
     private List<Fish> fishCaught = new List<Fish>();
     void Awake()
     {
@@ -32,12 +32,14 @@ public class GameManager : MonoBehaviour
         minigameStart = true;
         cameraFollowObject.enabled = false;
         hookControllerObject.enabled = false;
+        // fishMovementObject.enabled = false;
     }
 
     public void EndMinigame(){
         minigameStart = false;
         cameraFollowObject.enabled = true;
         hookControllerObject.enabled = true;
+        // fishMovementObject.enabled = true;
     }
 
     public void AddFish(Fish caughtFish){

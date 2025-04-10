@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class HookController : MonoBehaviour
@@ -33,7 +34,8 @@ public class HookController : MonoBehaviour
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, -10, 10);
         startingY -= descendSpeed * Time.deltaTime;
-        transform.position = new Vector3(mouseWorldPosition.x, startingY, 0f);
+        Vector3 newPosition = new Vector3(mouseWorldPosition.x, startingY, 0f);
+        transform.DOMove(newPosition, 0.63f).SetEase(Ease.OutSine);
         // Debug.Log(transform.position);
     }
 
