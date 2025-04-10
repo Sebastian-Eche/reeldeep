@@ -21,7 +21,7 @@ public class Minigame : MonoBehaviour
         Fish.OnFishHooked += StartMinigame;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         Fish.OnFishHooked -= StartMinigame;
     }
@@ -69,7 +69,7 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        speed = 7 + GameManager.Instance.FishCaught() - 0.5f; //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
+        speed = 7 + GameManager.Instance.CurrentFishCapacity() - 0.5f; //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
         maxSpeed = speed + speed - 2;
     }
 

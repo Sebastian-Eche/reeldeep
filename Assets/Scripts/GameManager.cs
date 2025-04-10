@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +12,8 @@ public class GameManager : MonoBehaviour
     public bool minigameStart = false;
     public bool fishOnHook = false;
     private List<Fish> fishCaught = new List<Fish>();
+    public int maxFishCapacity = 2;
+    public event Action OnMaxFishCapacity;
     void Awake()
     {
         if (Instance == null){
@@ -31,14 +35,15 @@ public class GameManager : MonoBehaviour
     public void StartMinigame(){
         minigameStart = true;
         cameraFollowObject.enabled = false;
-        hookControllerObject.enabled = false;
+        hookControllerObject.isPaused = true;
         // fishMovementObject.enabled = false;
     }
 
     public void EndMinigame(){
         minigameStart = false;
         cameraFollowObject.enabled = true;
-        hookControllerObject.enabled = true;
+        // hookControllerObject.enabled = true;
+        hookControllerObject.isPaused = false;
         // fishMovementObject.enabled = true;
     }
 
@@ -46,11 +51,28 @@ public class GameManager : MonoBehaviour
         fishCaught.Add(caughtFish);
         Debug.Log(fishCaught + " Fish is Caught");
         Debug.Log(fishCaught.Count);
+        if(MaxCapcityOfFishReached()){
+            Debug.Log("Max capacity reached condition TRUE");
+            if(OnMaxFishCapacity != null){
+                Debug.Log("EVENT TRIGGERED");
+                OnMaxFishCapacity.Invoke();
+            }else{
+                Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
+            }
+        }
     }
 
     public void RemoveFish(Fish fish){}
 
-    public int FishCaught(){
+    public int CurrentFishCapacity(){
         return fishCaught.Count;
+    }
+
+    private bool MaxCapcityOfFishReached(){
+        if (fishCaught.Count >= maxFishCapacity){
+            Debug.Log("Returning back to Boat");
+            return true;
+        }
+        return false;
     }
 }

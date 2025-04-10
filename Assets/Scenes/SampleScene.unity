@@ -755,6 +755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   descendSpeed: 2
+  isPaused: 0
 --- !u!212 &1151498012
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1201,7 +1202,7 @@ Transform:
   m_GameObject: {fileID: 1463254732}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -9, y: -13.9, z: 0}
+  m_LocalPosition: {x: -0.41, y: -12.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1286,37 +1287,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2074909097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2016063264
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2016063265}
-  m_Layer: 0
-  m_Name: Game Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2016063265
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016063264}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3922496, y: 0.34581763, z: -0.008453894}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2074909093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,7 +1307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2074909094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1552,6 +1522,7 @@ MonoBehaviour:
   fishMovementObject: {fileID: 2074909099}
   minigameStart: 0
   fishOnHook: 0
+  maxFishCapacity: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1562,7 +1533,6 @@ SceneRoots:
   - {fileID: 1084101324}
   - {fileID: 1151498013}
   - {fileID: 1571852733}
-  - {fileID: 2016063265}
   - {fileID: 2074909097}
   - {fileID: 1463254738}
   - {fileID: 2119219974}

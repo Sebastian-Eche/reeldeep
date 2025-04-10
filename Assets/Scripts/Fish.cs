@@ -7,8 +7,6 @@ public class Fish : MonoBehaviour
     public float weight;
     public float length;
     public int rarity;
-
-
     public static event Action<Fish> OnFishHooked;
 
 
