@@ -1050,7 +1050,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463254732}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -1237,8 +1237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0171c594ba30714c9f6cc34ad79c0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  hitSpotBuffer: 0.15
+  speed: 7
+  hitSpotBuffer: 0.2
 --- !u!4 &1571852733
 Transform:
   m_ObjectHideFlags: 0

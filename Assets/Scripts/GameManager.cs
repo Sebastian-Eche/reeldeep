@@ -47,4 +47,10 @@ public class GameManager : MonoBehaviour
         Debug.Log(fishCaught + " Fish is Caught");
         Debug.Log(fishCaught.Count);
     }
+
+    public void RemoveFish(Fish fish){}
+
+    public int FishCaught(){
+        return fishCaught.Count;
+    }
 }
