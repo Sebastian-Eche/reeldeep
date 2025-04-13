@@ -18,27 +18,32 @@ public class FishMovement : MonoBehaviour
     }
     void Start()
     {
-        MoveStraightToWayPoint();
+        // MoveStraightToWayPoint();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // if (isSwimming){
-            // MoveStraightToWayPoint();
-        // }
+        //Unpauses all fish when minigame is complete
+        if (!GameManager.Instance.minigameStart){
+            isSwimming = true;
+        }
+
+        if (isSwimming){
+            MoveStraightToWayPoint();
+        }
     }
 
     void MoveStraightToWayPoint(){
-        // transform.position = Vector3.MoveTowards(transform.position, waypoint.transform.position, moveSpeed * Time.deltaTime);
-        transform.DOMove(waypoint.transform.position, 5f).SetEase(Ease.InSine);
+        if ((waypoint.transform.position - transform.position).magnitude < 0.01f){
+            isSwimming = false;
+        }
+        transform.position = Vector3.MoveTowards(transform.position, waypoint.transform.position, moveSpeed * Time.deltaTime);
     }
 
     void PauseMovement(Fish hookedFish){
-        if (ReferenceEquals(this.gameObject, hookedFish.gameObject)){
-            Debug.Log("PAUSEDDDD");
-            // isSwimming = false;
-            transform.DOPause();
-        }
+        Debug.Log("PAUSEDDDD");
+        isSwimming = false;
     }
+
+    
 }
