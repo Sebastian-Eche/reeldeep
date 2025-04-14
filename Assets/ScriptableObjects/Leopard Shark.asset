@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739cadc99f5e0314fb63ae5c11ea34ca, type: 3}
+  m_Name: Leopard Shark
+  m_EditorClassIdentifier: 
+  fishSpecies: Shark
+  minWeight: 15
+  maxWeight: 40
+  minLength: 4
+  maxLength: 5
+  rarity: 1
+  speed: 5
+  isPrey: 0
+  fishSprite: {fileID: 0}

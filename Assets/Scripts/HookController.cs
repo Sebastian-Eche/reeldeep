@@ -6,7 +6,7 @@ public class HookController : MonoBehaviour
 {
     public Camera mainCamera;
     private float startingY;
-    public float descendSpeed = 2f;
+    public float descendSpeed = 4f;
     private bool hookStopped = false;
     public bool isPaused = false;
     private bool isReturning = false;
@@ -29,7 +29,7 @@ public class HookController : MonoBehaviour
         //when the minigame is playing pause ability to move hook around
         if(isPaused || isReturning){
             if(isReturning){
-                Debug.Log("IT IS RETURNING");
+                // Debug.Log("IT IS RETURNING");
                 Returning();
 
                 if(ReachedBoat()){
@@ -44,7 +44,7 @@ public class HookController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftShift)){
             AccelerateHook();
         }else if(Input.GetKeyUp(KeyCode.LeftShift)){
-            descendSpeed = 2f;
+            descendSpeed = 4f;
         }
 
         if(Input.GetKeyDown(KeyCode.LeftControl)){
@@ -53,8 +53,13 @@ public class HookController : MonoBehaviour
     }
 
     void FollowMouse(){
+        // Next three lines makes it where the hook can only move to left bounds of the camera or right
+        float cameraWidth = mainCamera.orthographicSize * mainCamera.aspect;
+        float leftBounds = mainCamera.transform.position.x - cameraWidth;
+        float rightBounds = mainCamera.transform.position.x + cameraWidth;
+
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, -10, 10);
+        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, leftBounds, rightBounds); //change hardcoded values of -10 to 10 to camera bounds
         startingY -= descendSpeed * Time.deltaTime;
         Vector3 newPosition = new Vector3(mouseWorldPosition.x, startingY, 0f);
         transform.DOMove(newPosition, 0.63f).SetEase(Ease.OutSine);
@@ -68,7 +73,7 @@ public class HookController : MonoBehaviour
         if (hookStopped){
             descendSpeed = 0f;
         }else{
-            descendSpeed = 2f;
+            descendSpeed = 4f;
         }
     }
 

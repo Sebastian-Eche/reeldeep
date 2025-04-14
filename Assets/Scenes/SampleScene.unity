@@ -754,7 +754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
-  descendSpeed: 2
+  descendSpeed: 4
   isPaused: 0
 --- !u!212 &1151498012
 SpriteRenderer:
@@ -1034,11 +1034,11 @@ GameObject:
   - component: {fileID: 1463254738}
   - component: {fileID: 1463254737}
   - component: {fileID: 1463254736}
-  - component: {fileID: 1463254735}
   - component: {fileID: 1463254734}
+  - component: {fileID: 1463254735}
   - component: {fileID: 1463254733}
   m_Layer: 0
-  m_Name: Common Fish (1)
+  m_Name: Common Fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463254732}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -1098,9 +1098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHooked: 0
-  weight: 0
-  length: 0
-  rarity: 0
+  fishInfo: {fileID: 11400000, guid: cf69ab815fb5b884c8f403c1e27b431c, type: 2}
 --- !u!70 &1463254736
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1302,12 +1300,12 @@ GameObject:
   - component: {fileID: 2074909098}
   - component: {fileID: 2074909099}
   m_Layer: 0
-  m_Name: Common Fish
+  m_Name: Uncommon Fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2074909094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1321,9 +1319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHooked: 0
-  weight: 0
-  length: 0
-  rarity: 0
+  fishInfo: {fileID: 11400000, guid: b941c101bd36d0e40a85d17dd1ebf234, type: 2}
 --- !u!70 &2074909095
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1472,7 +1468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 1953583702}
-  moveSpeed: 3
+  moveSpeed: 5
 --- !u!1 &2119219973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,7 +1518,7 @@ MonoBehaviour:
   fishMovementObject: {fileID: 2074909099}
   minigameStart: 0
   fishOnHook: 0
-  maxFishCapacity: 1
+  maxFishCapacity: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
