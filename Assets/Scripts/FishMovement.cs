@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class FishMovement : MonoBehaviour
 {
+    public enum SwimStyle {
+        Straight, Randomly
+    }
+    public SwimStyle swimStyle; 
     public Transform endPoint;
+    public Vector3 waypoint;
     public Transform head;
     private bool isSwimming = true;
+    // public bool isIdleSwimming = false;
+    // public bool isStraightSwimming = false;
     public float moveSpeed = 3f;
-    public Vector3 waypoint;
     private float currFishY;
     private float currFishX;
     private float directionChangeTimer;
@@ -42,12 +48,27 @@ public class FishMovement : MonoBehaviour
         }
 
         if(isSwimming){
-            MoveStraightToWayPoint(waypoint);
+            switch (swimStyle){
+                case SwimStyle.Straight:
+                    MoveStraightToEndPoint(endPoint.position);
+                    break;
+                case SwimStyle.Randomly:
+                    MoveToWayPoint(waypoint);
+                    break;
+            }
         }
 
     }
 
-    void MoveStraightToWayPoint(Vector3 waypoint){
+    void MoveStraightToEndPoint(Vector3 waypoint){
+        if ((waypoint - transform.position).magnitude < 0.01f){
+            isSwimming = false;
+        }
+        transform.position = Vector3.MoveTowards(transform.position, waypoint, moveSpeed * Time.deltaTime);
+        Debug.DrawLine(transform.position, waypoint, Color.red);
+    }
+
+    void MoveToWayPoint(Vector3 waypoint){
         if ((waypoint - transform.position).magnitude < 0.01f){
             head.rotation = keepRotation;
             if (directionChangeTimer <= 0){
@@ -79,7 +100,7 @@ public class FishMovement : MonoBehaviour
     void TurnToWaypoint(Vector3 newWaypoint){
         Vector3 distance = newWaypoint - head.position;
         Quaternion lookToWaypoint = Quaternion.LookRotation(Vector3.forward, distance);
-        head.rotation = Quaternion.Slerp(head.rotation, lookToWaypoint, Time.deltaTime * 2);
+        head.rotation = Quaternion.Slerp(head.rotation, lookToWaypoint, Time.deltaTime * moveSpeed);
     }
 
     void PauseMovement(Fish hookedFish){
