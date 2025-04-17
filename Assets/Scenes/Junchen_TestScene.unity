@@ -1041,7 +1041,7 @@ MonoBehaviour:
   commonFishPrefab: {fileID: 4901964026033092882, guid: ec254fb4b6550ef42b8fb1ca9632e0af, type: 3}
   uncommonFishPrefab: {fileID: 3963909292153001421, guid: e798ad7f97f5f3241ba2db92e5684a0d, type: 3}
   minSpawnTime: 1
-  maxSpawnTime: 5
+  maxSpawnTime: 4
   minFishCount: 1
   maxFishCount: 2
   spawnSegments: 3
