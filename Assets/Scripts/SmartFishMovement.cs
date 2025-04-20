@@ -36,16 +36,27 @@ public class SmartFishMovement : MonoBehaviour
         currentGridPos = diffusionGrid.WorldToGrid(transform.position);
         targetWorldPosition = transform.position;
 
+        Debug.Log($"Target World Position: {targetWorldPosition}");
+
+        // Debug log for tracking updated positions
+        //Debug.Log($"Initial Grid Position: {currentGridPos} (World Position: {transform.position})");
+        //Debug.Log($"Target World Position: {targetWorldPosition}");
+
         // Initialize behavior switch timer
         //behaviorSwitchTimer = behaviorSwitchInterval;
 
         if (swimStyle == SwimStyle.Random)
             NewWayPoint(); // Set initial random destination
+
+        Debug.Log($"[SmartFish] Initial GridPos: {currentGridPos}, Grid Size: {diffusionGrid.width}x{diffusionGrid.height}");
+
     }
 
+    
+
     private void Update()
-    {
-        currentGridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+    {   
+        currentGridPos = diffusionGrid.WorldToGrid(transform.position);
 
         if (!isSwimming || hasReachedGoal) return;
 
@@ -111,7 +122,7 @@ public class SmartFishMovement : MonoBehaviour
             if (next != currentGridPos)
             {
                 currentGridPos = next;
-                targetWorldPosition = new Vector3(next.x, next.y, 0);
+                targetWorldPosition = diffusionGrid.GridToWorld(next.x, next.y);
             }
         }
 

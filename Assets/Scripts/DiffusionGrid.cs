@@ -7,8 +7,8 @@ using UnityEditor;
 
 public class DiffusionGrid : MonoBehaviour
 {
-    public int width = 40; // Number of grid cells in the x-direction
-    public int height = 40; // Number of grid cells in the y-direction
+    public int width = 10; // Number of grid cells in the x-direction
+    public int height = 10; // Number of grid cells in the y-direction
     public Vector2Int goalPosition;  // This will be randomized every 420 frames
     public float diffusionRate = 0.9f; // Decay rate per step (Modify to change diffusion strength)
     public float[,] grid;
@@ -33,7 +33,6 @@ public class DiffusionGrid : MonoBehaviour
 
         Debug.Log($"Background Scale: {backgroundScale}");
 
-        CalculateGridOriginFromBackground();
         ResizeGridToMatchSprite();
 
         // Initial randomization of the goal position
@@ -166,7 +165,9 @@ public class DiffusionGrid : MonoBehaviour
     // Make sure that everything stays in grid bounds
     public bool InBounds(int x, int y)
     {
-        return x >= 0 && x < width && y >= 0 && y < height;
+        bool isInBounds = x >= 0 && x < width && y >= 0 && y < height;
+        //Debug.Log($"Checking bounds for ({x}, {y}): {isInBounds} (Width: {width}, Height: {height})");
+        return isInBounds;
     }
 
     // Get possible directions (4 cardinal + 4 diagonal)
