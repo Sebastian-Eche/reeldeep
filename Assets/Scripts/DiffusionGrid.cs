@@ -7,19 +7,34 @@ using UnityEditor;
 
 public class DiffusionGrid : MonoBehaviour
 {
-    public int width = 10;
-    public int height = 10;
+    public int width = 40; // Number of grid cells in the x-direction
+    public int height = 40; // Number of grid cells in the y-direction
     public Vector2Int goalPosition;  // This will be randomized every 420 frames
     public float diffusionRate = 0.9f; // Decay rate per step (Modify to change diffusion strength)
     public float[,] grid;
     public bool[,] obstacles;
 
     private int frameCounter = 0;  // Frame counter to track when to randomize the goal
+    private Vector3 backgroundPosition;
+    private Vector3 backgroundScale;
+
+    public Vector2 gridOrigin = Vector2.zero; // Grid offset in worldspace
 
     void Start()
     {
         grid = new float[width, height];
         obstacles = new bool[width, height];
+
+        Debug.Log($"Background Scale: {backgroundScale}");
+
+        // Get background information (Needs to be attached to background)
+        backgroundPosition = transform.position;  
+        backgroundScale = transform.localScale;
+
+        Debug.Log($"Background Scale: {backgroundScale}");
+
+        CalculateGridOriginFromBackground();
+        ResizeGridToMatchSprite();
 
         // Initial randomization of the goal position
         RandomizeGoalPosition();
@@ -84,10 +99,6 @@ public class DiffusionGrid : MonoBehaviour
                     {
                         float neighborValue = grid[nx, ny];
 
-                        // Basically without this factor the diagonal diffuses too strongly
-                        // A diagonal move is actually sqrt(2) or 1.414. 
-                        // By multiplying by 1/sqrt2 this normalizes the move.
-                        // Aka (This makes the diffusion pattern similar to the 4 direction one while still allowing diagonal movement)
                         // Apply diagonal decay for diagonal directions
                         if (Mathf.Abs(dir.x) == 1 && Mathf.Abs(dir.y) == 1)
                         {   
@@ -109,6 +120,14 @@ public class DiffusionGrid : MonoBehaviour
     void RandomizeGoalPosition()
     {
         System.Random rand = new System.Random();
+
+        // First clear the old goal in the grid
+        if (goalPosition.x >= 0 && goalPosition.y >= 0 && goalPosition.x < width && goalPosition.y < height)
+        {
+            grid[goalPosition.x, goalPosition.y] = 0f;
+        }
+
+        // Randomize new goal position
         int x = rand.Next(0, width);
         int y = rand.Next(0, height);
 
@@ -120,7 +139,7 @@ public class DiffusionGrid : MonoBehaviour
         }
 
         goalPosition = new Vector2Int(x, y);
-        grid[goalPosition.x, goalPosition.y] = 100f; 
+        grid[goalPosition.x, goalPosition.y] = 100f;  // Set new goal
     }
 
     // Generate random obstacles, avoiding the goal position
@@ -151,7 +170,6 @@ public class DiffusionGrid : MonoBehaviour
     }
 
     // Get possible directions (4 cardinal + 4 diagonal)
-    // Note: Because of Agent logic the order of these in list will determine ties in diffusion values
     public List<Vector2Int> GetDirections()
     {
         return new List<Vector2Int> {
@@ -160,12 +178,64 @@ public class DiffusionGrid : MonoBehaviour
             Vector2Int.left,
             Vector2Int.right,
 
-            // This allows for Diagonal Calculations
+            // Diagonal directions
             new Vector2Int(1, 1),    // NE
             new Vector2Int(-1, 1),   // NW
             new Vector2Int(1, -1),   // SE
             new Vector2Int(-1, -1)   // SW
         };
+    }
+
+    // Converts a world position to grid coordinates
+    public Vector2Int WorldToGrid(Vector3 worldPos)
+    {
+        int x = Mathf.FloorToInt(worldPos.x - gridOrigin.x);
+        int y = Mathf.FloorToInt(worldPos.y - gridOrigin.y);
+        return new Vector2Int(x, y);
+    }
+
+    // Converts grid coordinates to world position
+    public Vector3 GridToWorld(int x, int y)
+    {
+        return new Vector3(x + gridOrigin.x, y + gridOrigin.y, 0);
+    }
+
+    // Align grid origin to background bottom-left corner
+    void CalculateGridOriginFromBackground()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            gridOrigin = sr.bounds.min;
+        }
+    }
+
+    void ResizeGridToMatchSprite()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr == null)
+        {
+            Debug.LogWarning("No SpriteRenderer found on this GameObject.");
+            return;
+        }
+
+        // Get the size of the sprite in world units
+        Vector2 worldSize = sr.bounds.size;
+
+        float cellSize = 1f; // Each grid cell is 1x1 unit
+
+        // Calculate how many cells fit
+        width = Mathf.FloorToInt(worldSize.x / cellSize);
+        height = Mathf.FloorToInt(worldSize.y / cellSize);
+
+        // Set grid origin to bottom-left of the sprite
+        gridOrigin = sr.bounds.min;
+
+        // Reinitialize the grid and obstacles
+        grid = new float[width, height];
+        obstacles = new bool[width, height];
+
+        Debug.Log($"Grid resized: {width} x {height}, Origin: {gridOrigin}");
     }
 
     // For visualization/debug (This was all generated by LLM for testing purposes)
@@ -177,33 +247,29 @@ public class DiffusionGrid : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                float val = grid[x, y] / 100f; // Normalize to 0-1
-                if (x == goalPosition.x && y == goalPosition.y)
-                {
-                    Gizmos.color = new Color(1f, 0f, 0f, 0.5f); // Red with transparency
-                }
-                else
-                {
-                    Gizmos.color = new Color(val, val, val, 0.1f); // Non-opaque squares with transparency
-                }
-                Gizmos.DrawCube(new Vector3(x, y, 0), Vector3.one * 0.95f); // Draw grid cells
+                float val = grid[x, y] / 100f;
+                Gizmos.color = (x == goalPosition.x && y == goalPosition.y)
+                    ? new Color(1f, 0f, 0f, 0.5f)
+                    : new Color(val, val, val, 0.1f);
+
+                Vector3 cellPos = new Vector3(x + gridOrigin.x, y + gridOrigin.y, 0);
+                Gizmos.DrawCube(cellPos, Vector3.one * 0.95f);
             }
         }
 
 #if UNITY_EDITOR
-        // Display diffusion values inside the squares
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 12;
-        style.normal.textColor = Color.black; // Black for better visibility on light colors
+        GUIStyle style = new GUIStyle
+        {
+            fontSize = 12,
+            normal = { textColor = Color.black }
+        };
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                string label = grid[x, y].ToString("F1"); // Format the number to one decimal point
-                Vector3 labelPosition = new Vector3(x, y, 0);
-
-                // Adjust label position and size
+                string label = grid[x, y].ToString("F1");
+                Vector3 labelPosition = new Vector3(x + gridOrigin.x, y + gridOrigin.y, 0);
                 Handles.Label(labelPosition, label, style);
             }
         }
