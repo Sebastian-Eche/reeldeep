@@ -10,30 +10,33 @@ public class HookController : MonoBehaviour
     private bool hookStopped = false;
     public bool isPaused = false;
     private bool isReturning = false;
-    private Vector3 boatPOS = new Vector3(0,5,0);
+    private Transform boatPOS;
 
     private void OnDisable()
     {
-        GameManager.Instance.OnMaxFishCapacity -= ReturnToBoat;
+        GameManager.Instance.OnMaxAttemptsMade -= ReturnToBoat;
     }
 
     void Start()
     {
         startingY = transform.position.y;
-        GameManager.Instance.OnMaxFishCapacity += ReturnToBoat;
+        GameManager.Instance.OnMaxAttemptsMade += ReturnToBoat;
         Debug.Log("EVENT SUBSCRIBED");
+        boatPOS = GameManager.Instance.returnPoint.transform;
     }
 
     void Update()
     {
         //when the minigame is playing pause ability to move hook around
-        if(isPaused || isReturning){
+        if(isPaused || isReturning || GameManager.Instance.isDisplayingInfo){
             if(isReturning){
                 // Debug.Log("IT IS RETURNING");
                 Returning();
 
                 if(ReachedBoat()){
                     Debug.Log("BOAT IS REACHED");
+                    GameManager.Instance.isDisplayingInfo = true;
+                    StartCoroutine(GameManager.Instance.DisplayCaughtFish());
                 }
             }
             return;
@@ -87,14 +90,14 @@ public class HookController : MonoBehaviour
     }
 
     void Returning(){
-        transform.position = Vector3.MoveTowards(transform.position, boatPOS, descendSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, descendSpeed * Time.deltaTime);
     }
 
     bool ReachedBoat(){
-        if ((boatPOS - transform.position).magnitude < 0.1f){
+        if ((boatPOS.position - transform.position).magnitude < 0.1f){
             // Debug.Log("Boat Reached");
             isReturning = false;
-            startingY = boatPOS.y;
+            startingY = boatPOS.position.y;
             return true;
         }
         return false;

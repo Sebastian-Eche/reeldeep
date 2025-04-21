@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,13 @@ public class GameManager : MonoBehaviour
     public bool minigameStart = false;
     public bool fishOnHook = false;
     private List<Fish> fishCaught = new List<Fish>();
-    public int maxFishCapacity = 2;
-    public event Action OnMaxFishCapacity;
+    public int maxAttempts = 2;
+    public event Action OnMaxAttemptsMade;
+    public GameObject returnPoint;
+    public TextMeshProUGUI fishSpeciesText;
+    public TextMeshProUGUI fishMetaDataText;
+    public bool isDisplayingInfo = false;
+    public int attemptsToCatch = 0;
     void Awake()
     {
         if (Instance == null){
@@ -51,28 +57,57 @@ public class GameManager : MonoBehaviour
         fishCaught.Add(caughtFish);
         Debug.Log(fishCaught + " Fish is Caught");
         Debug.Log(fishCaught.Count);
-        if(MaxCapcityOfFishReached()){
+        if(MaxAttmeptsReached()){
             Debug.Log("Max capacity reached condition TRUE");
-            if(OnMaxFishCapacity != null){
+            if(OnMaxAttemptsMade != null){
                 Debug.Log("EVENT TRIGGERED");
-                OnMaxFishCapacity.Invoke();
+                OnMaxAttemptsMade.Invoke();
             }else{
                 Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
             }
         }
     }
 
-    public void RemoveFish(Fish fish){}
-
     public int CurrentFishCapacity(){
         return fishCaught.Count;
     }
 
-    private bool MaxCapcityOfFishReached(){
-        if (fishCaught.Count >= maxFishCapacity){
+    public bool MaxAttmeptsReached(){
+        if (attemptsToCatch >= maxAttempts){
             Debug.Log("Returning back to Boat");
             return true;
         }
         return false;
     }
+
+    public IEnumerator DisplayCaughtFish(){
+        fishSpeciesText.gameObject.SetActive(true);
+        fishMetaDataText.gameObject.SetActive(true);
+        for (int i = 0; i < fishCaught.Count; i++){
+            fishSpeciesText.text = "You caught a \n " + fishCaught[i].fishInfo.fishSpecies;
+            fishMetaDataText.text = "Length: " + fishCaught[i].GetLength() + "in" + " Weight: " + fishCaught[i].GetWeight() + "lbs";
+            yield return new WaitForSeconds(3);
+        }
+        fishSpeciesText.gameObject.SetActive(false);
+        fishMetaDataText.gameObject.SetActive(false);
+        isDisplayingInfo = false;
+        attemptsToCatch = 0;
+        fishCaught = new List<Fish>();
+    }
+
+    public void IncrementAttempts(){
+        attemptsToCatch++;
+    }
+
+    public void ReturningToBoat(){
+        if(MaxAttmeptsReached()){
+            if(OnMaxAttemptsMade != null){
+                Debug.Log("EVENT TRIGGERED");
+                OnMaxAttemptsMade.Invoke();
+            }else{
+                Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
+            }
+        }
+    }
+
 }

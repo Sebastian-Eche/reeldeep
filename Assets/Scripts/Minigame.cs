@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Minigame : MonoBehaviour
 {
+    public TextMeshProUGUI caughtFishDisplay;
     public float speed = 5f;
     private float maxSpeed;
     private SpriteRenderer minigameBorder;
@@ -58,12 +61,15 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.StartMinigame();
         fishCurrHooked = hookedFish;
         ChangeHitSpot();
+        GameManager.Instance.IncrementAttempts();
     }
 
     void EndMinigame(){
         if (correctHits >= amountOfMinigames)
         {
             GameManager.Instance.AddFish(fishCurrHooked);
+        }else{
+            GameManager.Instance.ReturningToBoat();
         }
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
         minigameStart = false;
@@ -71,10 +77,10 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        if (GameManager.Instance.CurrentFishCapacity() > 0){
+        if (GameManager.Instance.CurrentFishCapacity() > 2){
             speed = 7 + (GameManager.Instance.CurrentFishCapacity() - 0.5f);
         } //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
-        maxSpeed = speed + speed - 2;
+        maxSpeed = speed + speed - 5;
     }
 
     void MoveIndicator(){
@@ -115,6 +121,11 @@ public class Minigame : MonoBehaviour
             }
 
             if (correctHits >= amountOfMinigames || !hitSpotHit){
+                caughtFishDisplay.gameObject.SetActive(true);
+                if (!hitSpotHit){
+                    caughtFishDisplay.text = "FAILED";
+                }
+                StartCoroutine(RemoveDisplay());
                 EndMinigame();
             }
         }
@@ -148,6 +159,12 @@ public class Minigame : MonoBehaviour
             Debug.Log("helper activated");
             speed -= 1;
         }
+    }
+
+    IEnumerator RemoveDisplay(){
+        yield return new WaitForSeconds(1);
+        caughtFishDisplay.gameObject.SetActive(false);
+        caughtFishDisplay.text = "CAUGHT";
     }
 
 }
