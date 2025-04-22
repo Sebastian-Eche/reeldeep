@@ -83,6 +83,12 @@ public class GameManager : MonoBehaviour
     public IEnumerator DisplayCaughtFish(){
         fishSpeciesText.gameObject.SetActive(true);
         fishMetaDataText.gameObject.SetActive(true);
+        if (fishCaught.Count <= 0){
+            fishSpeciesText.text = "NO FISH CAUGHT \n";
+            fishMetaDataText.text = ":(";
+            yield return new WaitForSeconds(3);
+        }
+
         for (int i = 0; i < fishCaught.Count; i++){
             fishSpeciesText.text = "You caught a \n " + fishCaught[i].fishInfo.fishSpecies;
             fishMetaDataText.text = "Length: " + fishCaught[i].GetLength() + "in" + " Weight: " + fishCaught[i].GetWeight() + "lbs";
