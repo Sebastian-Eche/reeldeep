@@ -1036,17 +1036,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01ab6726f1634cc43bebb40fafe53c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  commonFishPrefab: {fileID: 4901964026033092882, guid: ec254fb4b6550ef42b8fb1ca9632e0af, type: 3}
-  uncommonFishPrefab: {fileID: 3963909292153001421, guid: e798ad7f97f5f3241ba2db92e5684a0d, type: 3}
+  fishPrefabs:
+  - {fileID: 3093679507496630684, guid: 0ada4c534c6288b478781e73beadcbb5, type: 3}
+  - {fileID: 873726566034587659, guid: 65db1397868bc3b48a92b50455d11b24, type: 3}
+  - {fileID: 8266734584648281515, guid: 9696d2b319bf4a445bf7e00cf1832b4c, type: 3}
+  - {fileID: 1349224579770627370, guid: 49a2622369b6aa54b828edd32f2566ec, type: 3}
   minSpawnTime: 1
-  maxSpawnTime: 4
+  maxSpawnTime: 3
   minFishCount: 1
-  maxFishCount: 3
+  maxFishCount: 5
   mainCamera: {fileID: 519420031}
-  sideSpawnXOffset: 2
-  bottomSpawnYOffset: 3
-  sideYMinOffset: 1
+  sideOffsetX: 2
+  bottomOffsetY: 3
+  sideYBottomFixedHeight: -1
   bottomYRange: 2
+  minDistanceBetweenFish: 1.2
+  fishColliderRadius: 0.6
+  maxAttempts: 10
+  cleanupOffsetY: 7
 --- !u!1 &1571852731
 GameObject:
   m_ObjectHideFlags: 0
