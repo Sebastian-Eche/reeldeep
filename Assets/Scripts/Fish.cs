@@ -37,4 +37,12 @@ public class Fish : MonoBehaviour
         
     }
 
+    public float GetWeight(){
+        return weight;
+    }
+
+    public float GetLength(){
+        return length;
+    }
+
 }
