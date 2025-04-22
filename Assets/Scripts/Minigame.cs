@@ -1,7 +1,11 @@
+using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Minigame : MonoBehaviour
 {
+    public TextMeshProUGUI caughtFishDisplay;
     public float speed = 5f;
     private float maxSpeed;
     private SpriteRenderer minigameBorder;
@@ -16,6 +20,7 @@ public class Minigame : MonoBehaviour
     private Fish fishCurrHooked;
     private float randomSizeX;
     public float hitSpotBuffer = 0.15f;
+    private int missCounter = 0;
     private void OnEnable()
     {
         Fish.OnFishHooked += StartMinigame;
@@ -56,12 +61,15 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.StartMinigame();
         fishCurrHooked = hookedFish;
         ChangeHitSpot();
+        GameManager.Instance.IncrementAttempts();
     }
 
     void EndMinigame(){
         if (correctHits >= amountOfMinigames)
         {
             GameManager.Instance.AddFish(fishCurrHooked);
+        }else{
+            GameManager.Instance.ReturningToBoat();
         }
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
         minigameStart = false;
@@ -69,8 +77,10 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        speed = 7 + GameManager.Instance.CurrentFishCapacity() - 0.5f; //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
-        maxSpeed = speed + speed - 2;
+        if (GameManager.Instance.CurrentFishCapacity() > 2){
+            speed = 7 + (GameManager.Instance.CurrentFishCapacity() - 0.5f);
+        } //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
+        maxSpeed = speed + speed - 5;
     }
 
     void MoveIndicator(){
@@ -103,11 +113,19 @@ public class Minigame : MonoBehaviour
                 ++correctHits;
                 ChangeHitSpot();
                 ChangeIndicatorSpeed();
+                missCounter = 0;
             }else{
                 Debug.Log("MISS");
+                missCounter++;
+                MissHelper();
             }
 
             if (correctHits >= amountOfMinigames || !hitSpotHit){
+                caughtFishDisplay.gameObject.SetActive(true);
+                if (!hitSpotHit){
+                    caughtFishDisplay.text = "FAILED";
+                }
+                StartCoroutine(RemoveDisplay());
                 EndMinigame();
             }
         }
@@ -115,7 +133,7 @@ public class Minigame : MonoBehaviour
     
     void ChangeHitSpot(){
         //changes the location of the hitspot somwhere in within the bounds of the border sprite
-        float borderRandomX = Random.Range(borderMinX, borderMaxX - 1f);
+        float borderRandomX = UnityEngine.Random.Range(borderMinX, borderMaxX - 1f);
         hitSpot.gameObject.transform.position = new Vector3(borderRandomX, minigameBorder.transform.position.y, 0);
         ChangeSizeOfHitSpot();
         hitSpotMinX = hitSpot.bounds.min.x - hitSpotBuffer;
@@ -124,14 +142,29 @@ public class Minigame : MonoBehaviour
 
     void ChangeSizeOfHitSpot(){
         //changes the size in this case the scale of hit spot to make it narrow or wider
-        randomSizeX = Random.Range(0.1f, 0.3f);
+        randomSizeX = UnityEngine.Random.Range(0.1f, 0.3f);
         hitSpot.gameObject.transform.localScale = new Vector3(randomSizeX, 0.44f, 0);
     }
 
     void ChangeIndicatorSpeed(){
         //something we can do is keep the speed and never reset it so the deeper they go the more difficult the minigame becomes
-        float randomSpeed = Random.Range(speed, maxSpeed); //difficully range: hard would be speed to 20 easy: speed to 13 NOTE: this is if speed is set to 7
+        float randomSpeed = UnityEngine.Random.Range(speed, maxSpeed); //difficully range: hard would be speed to 20 easy: speed to 13 NOTE: this is if speed is set to 7
         speed = randomSpeed;
         Debug.Log($"Speed: {speed}");
     }
+
+    void MissHelper(){
+        Debug.Log("MISS HELPER");
+        if (missCounter % 2 == 0){
+            Debug.Log("helper activated");
+            speed -= 1;
+        }
+    }
+
+    IEnumerator RemoveDisplay(){
+        yield return new WaitForSeconds(1);
+        caughtFishDisplay.gameObject.SetActive(false);
+        caughtFishDisplay.text = "CAUGHT";
+    }
+
 }
