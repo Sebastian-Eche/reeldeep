@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: a65040786b827ce4a8255b343da35eb1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - fishSprite: {fileID: 6654813671799336504, guid: 053ba04f2781ad647b32a6d58dac5303, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
