@@ -27,21 +27,15 @@ public class DiffusionGrid : MonoBehaviour
 
         Debug.Log($"Background Scale: {backgroundScale}");
 
-        // Get background information (Needs to be attached to background)
-        backgroundPosition = transform.position;  
-        backgroundScale = transform.localScale;
-
-        Debug.Log($"Background Scale: {backgroundScale}");
-
         ResizeGridToMatchSprite();
 
-        // Initial randomization of the goal position
+        // Initial randomization of the goal position (FOR TESTING ONLY)
         RandomizeGoalPosition();
 
         // Place the goal value
         grid[goalPosition.x, goalPosition.y] = 100f;
 
-        // Generate random obstacles
+        // Generate random obstacles (FOR TESTING ONLY)
         GenerateObstacles();
     }
 

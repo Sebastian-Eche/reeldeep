@@ -43,7 +43,7 @@ public class SmartFishMovement : MonoBehaviour
         //Debug.Log($"Target World Position: {targetWorldPosition}");
 
         // Initialize behavior switch timer
-        //behaviorSwitchTimer = behaviorSwitchInterval;
+        behaviorSwitchTimer = behaviorSwitchInterval;
 
         if (swimStyle == SwimStyle.Random)
             NewWayPoint(); // Set initial random destination
@@ -60,13 +60,13 @@ public class SmartFishMovement : MonoBehaviour
 
         if (!isSwimming || hasReachedGoal) return;
 
-        // Handle behavior switching on a timer
-        // behaviorSwitchTimer -= Time.deltaTime;
-        // if (behaviorSwitchTimer <= 0f)
-        // {
-        //     ToggleSwimStyle();
-        //     behaviorSwitchTimer = behaviorSwitchInterval;
-        // }
+        //Handle behavior switching on a timer
+        behaviorSwitchTimer -= Time.deltaTime;
+        if (behaviorSwitchTimer <= 0f)
+        {
+            ToggleSwimStyle();
+            behaviorSwitchTimer = behaviorSwitchInterval;
+        }
 
         // Perform the active behavior
         switch (swimStyle)
