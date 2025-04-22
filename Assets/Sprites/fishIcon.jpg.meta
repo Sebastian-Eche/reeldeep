@@ -103,10 +103,10 @@ TextureImporter:
       name: fishIcon_0
       rect:
         serializedVersion: 2
-        x: 137
-        y: 280
-        width: 786
-        height: 387
+        x: 0
+        y: 5
+        width: 921
+        height: 656
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
