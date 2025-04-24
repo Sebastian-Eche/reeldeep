@@ -282,4 +282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7bcb6f2fd2503141a9542f5e7a4234e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fishSlotPrefab: {fileID: 0}
+  fishSlotParent: {fileID: 0}
   fishEncyclopediaUI: {fileID: 0}
