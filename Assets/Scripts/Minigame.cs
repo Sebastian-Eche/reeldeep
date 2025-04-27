@@ -8,6 +8,7 @@ public class Minigame : MonoBehaviour
     public TextMeshProUGUI caughtFishDisplay;
     public float speed = 5f;
     private float maxSpeed;
+    private float speedModifier;
     private SpriteRenderer minigameBorder;
     private GameObject indicator;
     private float borderMinX, hitSpotMinX;
@@ -62,6 +63,7 @@ public class Minigame : MonoBehaviour
         fishCurrHooked = hookedFish;
         ChangeHitSpot();
         GameManager.Instance.IncrementAttempts();
+        CheckRarity();
     }
 
     void EndMinigame(){
@@ -77,10 +79,7 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        if (GameManager.Instance.CurrentFishCapacity() > 2){
-            speed += (GameManager.Instance.CurrentFishCapacity() - 0.5f);
-        } //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
-        maxSpeed = speed + GameManager.Instance.CurrentFishCapacity();
+        speedModifier += GameManager.Instance.CurrentFishCapacity();
     }
 
     void MoveIndicator(){
@@ -159,6 +158,30 @@ public class Minigame : MonoBehaviour
             Debug.Log("helper activated");
             speed -= 1;
         }
+    }
+
+    void CheckRarity(){
+        switch (fishCurrHooked.fishInfo.rarity){
+            case FishInfo.Rarity.Common:
+                speed = 6f;
+                maxSpeed = 8f;
+                break;
+            case FishInfo.Rarity.Uncommon:
+                speed = 8.75f;
+                maxSpeed = 11f;
+                break;
+            case FishInfo.Rarity.Rare:
+                speed = 13f;
+                maxSpeed = 16f;
+                break;
+            case FishInfo.Rarity.Legendary:
+                speed = 17f;
+                maxSpeed = 21f;
+                break;
+        }
+        speed += speedModifier;
+        maxSpeed += speedModifier;
+        Debug.Log(fishCurrHooked.fishInfo.rarity);
     }
 
     IEnumerator RemoveDisplay(){
