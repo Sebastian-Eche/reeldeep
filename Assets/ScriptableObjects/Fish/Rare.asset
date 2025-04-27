@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cadc99f5e0314fb63ae5c11ea34ca, type: 3}
   m_Name: Rare
   m_EditorClassIdentifier: 
-  fishSpecies: 
-  minWeight: 0
-  maxWeight: 0
-  minLength: 0
-  maxLength: 0
-  rarity: 0
+  rarity: 2
+  fishSpecies: Blue-Ringed Octopus
+  minWeight: 1
+  maxWeight: 3
+  minLength: 5
+  maxLength: 10
   habitat: 
   isPrey: 0
   fishSprite: {fileID: 0}
