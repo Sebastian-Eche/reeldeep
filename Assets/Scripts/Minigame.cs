@@ -38,7 +38,7 @@ public class Minigame : MonoBehaviour
         hitSpot = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         borderMinX = minigameBorder.bounds.min.x + 1.5f;
         borderMaxX = minigameBorder.bounds.max.x - 1;
-        maxSpeed = speed + speed;
+        maxSpeed = speed + 2;
     }
 
     // Update is called once per frame
@@ -78,9 +78,9 @@ public class Minigame : MonoBehaviour
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
         if (GameManager.Instance.CurrentFishCapacity() > 2){
-            speed = 7 + (GameManager.Instance.CurrentFishCapacity() - 0.5f);
+            speed += (GameManager.Instance.CurrentFishCapacity() - 0.5f);
         } //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
-        maxSpeed = speed + speed - 5;
+        maxSpeed = speed + GameManager.Instance.CurrentFishCapacity();
     }
 
     void MoveIndicator(){

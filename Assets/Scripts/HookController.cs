@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -7,10 +8,13 @@ public class HookController : MonoBehaviour
     public Camera mainCamera;
     private float startingY;
     public float descendSpeed = 4f;
+    private float regularDescendSpeed = 0;
     private bool hookStopped = false;
+    private bool hookAccelerated = false;
     public bool isPaused = false;
     private bool isReturning = false;
     private Transform boatPOS;
+    private bool teleportedNearPoint = false;
 
     private void OnDisable()
     {
@@ -19,6 +23,7 @@ public class HookController : MonoBehaviour
 
     void Start()
     {
+        regularDescendSpeed = descendSpeed;
         startingY = transform.position.y;
         GameManager.Instance.OnMaxAttemptsMade += ReturnToBoat;
         Debug.Log("EVENT SUBSCRIBED");
@@ -46,9 +51,7 @@ public class HookController : MonoBehaviour
         FollowMouse();
         if(Input.GetKeyDown(KeyCode.LeftShift)){
             AccelerateHook();
-        }else if(Input.GetKeyUp(KeyCode.LeftShift)){
-            descendSpeed = 4f;
-        }
+        } 
 
         if(Input.GetKeyDown(KeyCode.LeftControl)){
             StopHook();
@@ -66,7 +69,6 @@ public class HookController : MonoBehaviour
         startingY -= descendSpeed * Time.deltaTime;
         Vector3 newPosition = new Vector3(mouseWorldPosition.x, startingY, 0f);
         transform.DOMove(newPosition, 0.63f).SetEase(Ease.OutSine);
-        // Debug.Log(transform.position);
     }
 
     void StopHook(){
@@ -76,12 +78,17 @@ public class HookController : MonoBehaviour
         if (hookStopped){
             descendSpeed = 0f;
         }else{
-            descendSpeed = 4f;
+            descendSpeed = regularDescendSpeed;
         }
     }
 
     void AccelerateHook(){
-        descendSpeed *= 2.2f;
+        hookAccelerated = !hookAccelerated;
+        if (hookAccelerated){
+            descendSpeed *= 2.2f;
+        }else{
+            descendSpeed = regularDescendSpeed;
+        }
     }
 
     void ReturnToBoat(){
@@ -91,6 +98,11 @@ public class HookController : MonoBehaviour
 
     void Returning(){
         transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, descendSpeed * Time.deltaTime);
+        gameObject.GetComponent<Collider2D>().enabled = false;
+        if (!teleportedNearPoint){
+            teleportedNearPoint = !teleportedNearPoint;
+            StartCoroutine(SkipNearReturnPoint());
+        }
     }
 
     bool ReachedBoat(){
@@ -98,9 +110,16 @@ public class HookController : MonoBehaviour
             // Debug.Log("Boat Reached");
             isReturning = false;
             startingY = boatPOS.position.y;
+            gameObject.GetComponent<Collider2D>().enabled = true;
+            teleportedNearPoint = true;
             return true;
         }
         return false;
+    }
+
+    IEnumerator SkipNearReturnPoint(){
+        yield return new WaitForSeconds(3);
+        transform.position = new Vector3(0, -10, 0);
     }
 
     void OnTriggerEnter2D(Collider2D other)
