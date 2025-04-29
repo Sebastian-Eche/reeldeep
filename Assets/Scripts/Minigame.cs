@@ -167,8 +167,8 @@ public class Minigame : MonoBehaviour
                 maxSpeed = 8f;
                 break;
             case FishInfo.Rarity.Uncommon:
-                speed = 8.75f;
-                maxSpeed = 11f;
+                speed = 9f;
+                maxSpeed = 12f;
                 break;
             case FishInfo.Rarity.Rare:
                 speed = 13f;
