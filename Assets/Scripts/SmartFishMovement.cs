@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+
 public class SmartFishMovement : MonoBehaviour
 {
     public enum SwimStyle { Random, GoalSeeking }
@@ -25,6 +26,17 @@ public class SmartFishMovement : MonoBehaviour
     // Timer for switching between behaviors
     public float behaviorSwitchInterval = 10f; // Time in seconds to switch behavior
     private float behaviorSwitchTimer;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void OnEnable()
+    {
+        Fish.OnFishHooked += PauseMovement;
+    }
+
+    void OnDisable()
+    {
+        Fish.OnFishHooked -= PauseMovement;
+    }
 
     private void Start()
     {
@@ -56,6 +68,9 @@ public class SmartFishMovement : MonoBehaviour
 
     private void Update()
     {   
+         if (!GameManager.Instance.minigameStart){
+            isSwimming = true;
+        }
         currentGridPos = diffusionGrid.WorldToGrid(transform.position);
 
         if (!isSwimming || hasReachedGoal) return;
@@ -190,8 +205,9 @@ public class SmartFishMovement : MonoBehaviour
         }
     }
 
-    // Public methods to pause/resume swimming
-    public void PauseMovement() => isSwimming = false;
-    public void ResumeMovement() => isSwimming = true;
+        void PauseMovement(Fish hookedFish){
+        Debug.Log("PAUSEDDDD");
+        isSwimming = false;
+    }
 }
 
