@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 public class SmartFishMovement : MonoBehaviour
 {
-    public enum SwimStyle { Random, GoalSeeking }
+    public enum SwimStyle { Random, GoalSeeking, Straight }
     public SwimStyle swimStyle = SwimStyle.Random; // Starting behavior
 
     public float moveSpeed = 3f;
     public Transform head;
+    public Transform endPoint;
 
     public DiffusionGrid diffusionGrid;
     public Vector2Int currentGridPos;
@@ -48,10 +49,6 @@ public class SmartFishMovement : MonoBehaviour
 
         Debug.Log($"Target World Position: {targetWorldPosition}");
 
-        // Debug log for tracking updated positions
-        //Debug.Log($"Initial Grid Position: {currentGridPos} (World Position: {transform.position})");
-        //Debug.Log($"Target World Position: {targetWorldPosition}");
-
         // Initialize behavior switch timer
         behaviorSwitchTimer = behaviorSwitchInterval;
 
@@ -59,13 +56,10 @@ public class SmartFishMovement : MonoBehaviour
             NewWayPoint(); // Set initial random destination
 
         Debug.Log($"[SmartFish] Initial GridPos: {currentGridPos}, Grid Size: {diffusionGrid.width}x{diffusionGrid.height}");
-
     }
 
-    
-
     private void Update()
-    {   
+    {
         if (!GameManager.Instance.minigameStart){
             isSwimming = true;
         }
@@ -89,6 +83,9 @@ public class SmartFishMovement : MonoBehaviour
                 break;
             case SwimStyle.GoalSeeking:
                 GoalSeek();
+                break;
+            case SwimStyle.Straight:
+                MoveStraightToEndPoint(endPoint.position);
                 break;
         }
     }
@@ -141,6 +138,17 @@ public class SmartFishMovement : MonoBehaviour
 
         TurnToWaypoint(targetWorldPosition);
         transform.position = Vector3.MoveTowards(transform.position, targetWorldPosition, moveSpeed * Time.deltaTime);
+    }
+
+    // Move in a straight line to a fixed endpoint
+    void MoveStraightToEndPoint(Vector3 waypoint)
+    {
+        if ((waypoint - transform.position).magnitude < 0.01f)
+        {
+            isSwimming = false;
+        }
+        transform.position = Vector3.MoveTowards(transform.position, waypoint, moveSpeed * Time.deltaTime);
+        Debug.DrawLine(transform.position, waypoint, Color.red);
     }
 
     // Choose a new random point to swim toward
@@ -209,4 +217,5 @@ public class SmartFishMovement : MonoBehaviour
         isSwimming = false;
     }
 }
+
 
