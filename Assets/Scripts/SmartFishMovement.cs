@@ -28,10 +28,11 @@ public class SmartFishMovement : MonoBehaviour
     private float swimToggleTimer;
     private bool onGrid = false;
 
-    // Radius for predator to detect prey
-    public float detectionRadius = 5f; 
-    // Need fish reference for predator-prey
+    public float detectionRadius = 5f; // Radius for predator to detect prey
     private Fish fish;
+
+    private float originalMoveSpeed;
+    private Fish currentTargetPrey = null; // Track current prey target
 
     private void OnEnable()
     {
@@ -55,7 +56,6 @@ public class SmartFishMovement : MonoBehaviour
 
         Debug.Log($"Target World Position: {targetWorldPosition}");
 
-        // get fish attributes to check for predator/prey 
         fish = GetComponent<Fish>();
         originalMoveSpeed = moveSpeed;
 
@@ -74,10 +74,29 @@ public class SmartFishMovement : MonoBehaviour
 
         if (!isSwimming || hasReachedGoal) return;
 
-        //Handle predator-prey detection
+        // Handle predator-prey detection or tracking
         if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
         {
-            DetectAndPursuePrey();
+            if (currentTargetPrey == null)
+            {
+                DetectAndPursuePrey();
+            }
+            else if (currentTargetPrey != null)
+            {
+                Vector2Int preyGridPos = diffusionGrid.WorldToGrid(currentTargetPrey.transform.position);
+                if (diffusionGrid.InBounds(preyGridPos.x, preyGridPos.y))
+                {
+                    diffusionGrid.SetDynamicGoal(currentTargetPrey.transform.position);
+                }
+                else
+                {
+                    // Prey is off-grid: stop pursuing
+                    currentTargetPrey = null;
+                    swimStyle = SwimStyle.Straight;
+                    moveSpeed = originalMoveSpeed;
+                    Debug.Log("Prey left grid. Predator stops pursuit.");
+                }
+            }
         }
 
         // Logic for switching between straight and random after reaching the grid
@@ -146,6 +165,17 @@ public class SmartFishMovement : MonoBehaviour
             if (currentGridPos == diffusionGrid.goalPosition)
             {
                 hasReachedGoal = true;
+
+                if (currentTargetPrey != null)
+                {
+                    // Despawn the prey and switch back to normal movement patterns
+                    Destroy(currentTargetPrey.gameObject); 
+                    currentTargetPrey = null;
+                    moveSpeed = originalMoveSpeed;
+                    swimStyle = SwimStyle.Random;
+                    Debug.Log("Prey caught and destroyed.");
+                }
+
                 return;
             }
 
@@ -223,7 +253,7 @@ public class SmartFishMovement : MonoBehaviour
         isSwimming = false;
     }
 
-    // Predator and prey Detection .
+    // predator detection and pursuit
     void DetectAndPursuePrey()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
@@ -232,17 +262,18 @@ public class SmartFishMovement : MonoBehaviour
             Fish targetFish = hit.GetComponent<Fish>();
             if (targetFish != null && targetFish.fishInfo.isPrey)
             {
-                diffusionGrid.SetDynamicGoal(targetFish.transform.position);
+                currentTargetPrey = targetFish;
+                diffusionGrid.SetDynamicGoal(currentTargetPrey.transform.position);
                 swimStyle = SwimStyle.GoalSeeking;
                 hasReachedGoal = false;
-                moveSpeed = originalMoveSpeed + 2f; 
+                moveSpeed = originalMoveSpeed + 2f; // Increase speed when pursuing
                 Debug.Log($"Predator pursuing prey: {targetFish.fishInfo.fishSpecies}");
                 break;
             }
         }
     }
 
-    // Visualize predator detection radius (LLM Generated Gizmo)
+    // Visualize predator detection radius
     void OnDrawGizmosSelected()
     {
         Fish f = GetComponent<Fish>();
@@ -253,6 +284,9 @@ public class SmartFishMovement : MonoBehaviour
         }
     }
 }
+
+
+
 
 
 

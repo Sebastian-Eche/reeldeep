@@ -41,17 +41,17 @@ public class DiffusionGrid : MonoBehaviour
 
     void Update()
     {
-        // Increment frame counter
-        frameCounter++;
+        // // Increment frame counter
+        // frameCounter++;
 
-        // Randomize the goal position every 420 Frames (Blaze it?)
-        if (frameCounter >= 420)
-        {
-            RandomizeGoalPosition();
+        // // Randomize the goal position every 420 Frames (Blaze it?)
+        // if (frameCounter >= 420)
+        // {
+        //     RandomizeGoalPosition();
 
-            // Reset the frame counter
-            frameCounter = 0;  
-        }
+        //     // Reset the frame counter
+        //     frameCounter = 0;  
+        // }
 
         // Diffusion update logic
         if (grid == null || obstacles == null)
@@ -198,7 +198,6 @@ public class DiffusionGrid : MonoBehaviour
     // Select a target based on world position input
     public void SetDynamicGoal(Vector3 worldPos)
     {
-    RandomizeGoalPosition();
     goalPosition = WorldToGrid(worldPos);
     grid[goalPosition.x, goalPosition.y] = 100f;
     }    
