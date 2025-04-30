@@ -28,6 +28,9 @@ public class SmartFishMovement : MonoBehaviour
     private float swimToggleTimer;
     private bool onGrid = false;
 
+    // Singleton (Experimenting with only allowing 1 predator-prey interaction to be going on at same time)
+    public static Fish globalTargetPrey = null;
+
     public float detectionRadius = 5f; // Radius for predator to detect prey
     private Fish fish;
 
@@ -72,7 +75,11 @@ public class SmartFishMovement : MonoBehaviour
         }
         currentGridPos = diffusionGrid.WorldToGrid(transform.position);
 
+        // hasReachedGoal functionality may no longer be needed
         if (!isSwimming || hasReachedGoal) return;
+
+        // Handle predator-prey detection or tracking
+        if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
 
         // Handle predator-prey detection or tracking
         if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
@@ -163,17 +170,23 @@ public class SmartFishMovement : MonoBehaviour
         {
             // Stop if goal is reached
             if (currentGridPos == diffusionGrid.goalPosition)
-            {
-                hasReachedGoal = true;
+            {      
+                // hasReachedGoal = true;
 
                 if (currentTargetPrey != null)
                 {
                     // Despawn the prey and switch back to normal movement patterns
                     Destroy(currentTargetPrey.gameObject); 
                     currentTargetPrey = null;
+                    globalTargetPrey = null;
                     moveSpeed = originalMoveSpeed;
                     swimStyle = SwimStyle.Random;
                     Debug.Log("Prey caught and destroyed.");
+
+                    // Start moving again
+                    NewWayPoint();
+                    TurnToWaypoint(targetWorldPosition);
+                    isSwimming = true;
                 }
 
                 return;
@@ -255,7 +268,10 @@ public class SmartFishMovement : MonoBehaviour
 
     // predator detection and pursuit
     void DetectAndPursuePrey()
-    {
+    {   
+        // Another predator already has a prey (trying to limit predator and prey interactions)
+        if (globalTargetPrey != null) return; 
+
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
         foreach (var hit in hits)
         {
@@ -263,10 +279,11 @@ public class SmartFishMovement : MonoBehaviour
             if (targetFish != null && targetFish.fishInfo.isPrey)
             {
                 currentTargetPrey = targetFish;
+                globalTargetPrey = targetFish;
                 diffusionGrid.SetDynamicGoal(currentTargetPrey.transform.position);
                 swimStyle = SwimStyle.GoalSeeking;
                 hasReachedGoal = false;
-                moveSpeed = originalMoveSpeed + 2f; // Increase speed when pursuing
+                moveSpeed = originalMoveSpeed + 4f; // Increase speed when pursuing
                 Debug.Log($"Predator pursuing prey: {targetFish.fishInfo.fishSpecies}");
                 break;
             }
