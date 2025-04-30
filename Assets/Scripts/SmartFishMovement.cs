@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class SmartFishMovement : MonoBehaviour
 {
     public enum SwimStyle { Random, GoalSeeking, Straight }
-    public SwimStyle swimStyle = SwimStyle.Random; // Starting behavior
+    public SwimStyle swimStyle = SwimStyle.Straight; // Starting behavior
 
     public float moveSpeed = 3f;
     public Transform head;
@@ -23,9 +23,15 @@ public class SmartFishMovement : MonoBehaviour
     private bool isSwimming = true;
     private bool hasReachedGoal = false;
 
-    // Timer for switching between behaviors
-    public float behaviorSwitchInterval = 10f; // Time in seconds to switch behavior
-    private float behaviorSwitchTimer;
+    // Timer for switching between straight and random after reaching grid
+    public float swimToggleInterval = 2f;
+    private float swimToggleTimer;
+    private bool onGrid = false;
+
+    // Radius for predator to detect prey
+    public float detectionRadius = 5f; 
+    // Need fish reference for predator-prey
+    private Fish fish;
 
     private void OnEnable()
     {
@@ -49,8 +55,9 @@ public class SmartFishMovement : MonoBehaviour
 
         Debug.Log($"Target World Position: {targetWorldPosition}");
 
-        // Initialize behavior switch timer
-        behaviorSwitchTimer = behaviorSwitchInterval;
+        // get fish attributes to check for predator/prey 
+        fish = GetComponent<Fish>();
+        originalMoveSpeed = moveSpeed;
 
         if (swimStyle == SwimStyle.Random)
             NewWayPoint(); // Set initial random destination
@@ -67,12 +74,27 @@ public class SmartFishMovement : MonoBehaviour
 
         if (!isSwimming || hasReachedGoal) return;
 
-        //Handle behavior switching on a timer
-        behaviorSwitchTimer -= Time.deltaTime;
-        if (behaviorSwitchTimer <= 0f)
+        //Handle predator-prey detection
+        if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
         {
-            ToggleSwimStyle();
-            behaviorSwitchTimer = behaviorSwitchInterval;
+            DetectAndPursuePrey();
+        }
+
+        // Logic for switching between straight and random after reaching the grid
+        if (!onGrid && diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
+        {
+            onGrid = true;
+            swimToggleTimer = swimToggleInterval;
+        }
+
+        if (onGrid && swimStyle != SwimStyle.GoalSeeking)
+        {
+            swimToggleTimer -= Time.deltaTime;
+            if (swimToggleTimer <= 0f)
+            {
+                swimStyle = (swimStyle == SwimStyle.Straight) ? SwimStyle.Random : SwimStyle.Straight;
+                swimToggleTimer = swimToggleInterval;
+            }
         }
 
         // Perform the active behavior
@@ -194,28 +216,43 @@ public class SmartFishMovement : MonoBehaviour
         return bestPosition;
     }
 
-    // Switch between Random and GoalSeeking behaviors
-    void ToggleSwimStyle()
-    {
-        swimStyle = (swimStyle == SwimStyle.Random) ? SwimStyle.GoalSeeking : SwimStyle.Random;
-        Debug.Log("Switched swim style to: " + swimStyle);
-
-        if (swimStyle == SwimStyle.Random)
-        {
-            directionChangeTimer = directionChangeTime;
-            NewWayPoint(); // Get a fresh random target
-        }
-        else if (swimStyle == SwimStyle.GoalSeeking)
-        {
-            hasReachedGoal = false; // Allow seeking to start again
-        }
-    }
 
     // Public methods to pause/resume swimming
     void PauseMovement(Fish hookedFish){
         Debug.Log("PAUSEDDDD");
         isSwimming = false;
     }
+
+    // Predator and prey Detection .
+    void DetectAndPursuePrey()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
+        foreach (var hit in hits)
+        {
+            Fish targetFish = hit.GetComponent<Fish>();
+            if (targetFish != null && targetFish.fishInfo.isPrey)
+            {
+                diffusionGrid.SetDynamicGoal(targetFish.transform.position);
+                swimStyle = SwimStyle.GoalSeeking;
+                hasReachedGoal = false;
+                moveSpeed = originalMoveSpeed + 2f; 
+                Debug.Log($"Predator pursuing prey: {targetFish.fishInfo.fishSpecies}");
+                break;
+            }
+        }
+    }
+
+    // Visualize predator detection radius (LLM Generated Gizmo)
+    void OnDrawGizmosSelected()
+    {
+        Fish f = GetComponent<Fish>();
+        if (f != null && f.fishInfo != null && !f.fishInfo.isPrey)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        }
+    }
 }
+
 
 

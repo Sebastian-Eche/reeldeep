@@ -195,15 +195,13 @@ public class DiffusionGrid : MonoBehaviour
         return new Vector3(x + gridOrigin.x, y + gridOrigin.y, 0);
     }
 
-    // Align grid origin to background bottom-left corner
-    void CalculateGridOriginFromBackground()
+    // Select a target based on world position input
+    public void SetDynamicGoal(Vector3 worldPos)
     {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            gridOrigin = sr.bounds.min;
-        }
-    }
+    RandomizeGoalPosition();
+    goalPosition = WorldToGrid(worldPos);
+    grid[goalPosition.x, goalPosition.y] = 100f;
+    }    
 
     void ResizeGridToMatchSprite()
     {
