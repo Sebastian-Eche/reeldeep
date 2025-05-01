@@ -63,7 +63,9 @@ public class SmartFishMovement : MonoBehaviour
         originalMoveSpeed = moveSpeed;
 
         if (swimStyle == SwimStyle.Random)
-            NewWayPoint(); // Set initial random destination
+
+            // Set initial random destination
+            NewWayPoint(); 
 
         Debug.Log($"[SmartFish] Initial GridPos: {currentGridPos}, Grid Size: {diffusionGrid.width}x{diffusionGrid.height}");
     }
@@ -99,8 +101,10 @@ public class SmartFishMovement : MonoBehaviour
                 {
                     // Prey is off-grid: stop pursuing
                     currentTargetPrey = null;
-                    swimStyle = SwimStyle.Straight;
+                    globalTargetPrey = null;
+                    swimStyle = SwimStyle.Random;
                     moveSpeed = originalMoveSpeed;
+                    NewWayPoint();
                     Debug.Log("Prey left grid. Predator stops pursuit.");
                 }
             }
@@ -110,17 +114,8 @@ public class SmartFishMovement : MonoBehaviour
         if (!onGrid && diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
         {
             onGrid = true;
-            swimToggleTimer = swimToggleInterval;
-        }
-
-        if (onGrid && swimStyle != SwimStyle.GoalSeeking)
-        {
-            swimToggleTimer -= Time.deltaTime;
-            if (swimToggleTimer <= 0f)
-            {
-                swimStyle = (swimStyle == SwimStyle.Straight) ? SwimStyle.Random : SwimStyle.Straight;
-                swimToggleTimer = swimToggleInterval;
-            }
+            // Delay switch by swimToggleInterval (Had to look this up. )
+            Invoke(nameof(SwitchToRandomAfterGridEntry), swimToggleInterval); 
         }
 
         // Perform the active behavior
@@ -259,7 +254,6 @@ public class SmartFishMovement : MonoBehaviour
         return bestPosition;
     }
 
-
     // Public methods to pause/resume swimming
     void PauseMovement(Fish hookedFish){
         Debug.Log("PAUSEDDDD");
@@ -298,6 +292,18 @@ public class SmartFishMovement : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        }
+    }
+
+    // One-time switch to Random after grid entry (only if not in prey pursuit)
+    void SwitchToRandomAfterGridEntry()
+    {
+        // Only switch if not currently pursuing prey
+        if (swimStyle != SwimStyle.GoalSeeking)
+        {
+            swimStyle = SwimStyle.Random;
+            NewWayPoint();
+            Debug.Log("Switched to Random after entering grid.");
         }
     }
 }
