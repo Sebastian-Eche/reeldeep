@@ -217,5 +217,5 @@ MonoBehaviour:
   endPoint: {fileID: 2243242621498904481}
   waypoint: {x: 0, y: 0, z: 0}
   head: {fileID: 7570194552986552725}
-  moveSpeed: 5
+  moveSpeed: 6
   directionChangeTime: 3

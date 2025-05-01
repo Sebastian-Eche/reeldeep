@@ -186,7 +186,7 @@ MonoBehaviour:
   endPoint: {fileID: 3946394615827570130}
   waypoint: {x: 0, y: 0, z: 0}
   head: {fileID: 3434202204262887567}
-  moveSpeed: 5
+  moveSpeed: 8.2
   directionChangeTime: 3
 --- !u!1 &4629905255289295073
 GameObject:

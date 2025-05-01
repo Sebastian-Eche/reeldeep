@@ -14,7 +14,6 @@ public class HookController : MonoBehaviour
     public bool isPaused = false;
     private bool isReturning = false;
     private Transform boatPOS;
-    private bool teleportedNearPoint = false;
     private float returningTimer = 3f;
     private float returnSpeed = 4f;
 
@@ -67,7 +66,7 @@ public class HookController : MonoBehaviour
         float rightBounds = mainCamera.transform.position.x + cameraWidth;
 
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, leftBounds, rightBounds); //change hardcoded values of -10 to 10 to camera bounds
+        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, leftBounds, rightBounds);
         startingY -= descendSpeed * Time.deltaTime;
         Vector3 newPosition = new Vector3(mouseWorldPosition.x, startingY, 0f);
         transform.DOMove(newPosition, 0.63f).SetEase(Ease.OutSine);
@@ -107,20 +106,15 @@ public class HookController : MonoBehaviour
         float step = returnSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, step);
         gameObject.GetComponent<Collider2D>().enabled = false;
-        // if (!teleportedNearPoint){
-        //     teleportedNearPoint = !teleportedNearPoint;
-        //     StartCoroutine(SkipNearReturnPoint());
-        // }
     }
 
     bool ReachedBoat(){
         if ((boatPOS.position - transform.position).magnitude < 0.1f){
             returningTimer = 3f;
-            // Debug.Log("Boat Reached");
             isReturning = false;
+            returnSpeed = 4f;
             startingY = boatPOS.position.y;
             gameObject.GetComponent<Collider2D>().enabled = true;
-            teleportedNearPoint = true;
             return true;
         }
         return false;
@@ -142,6 +136,5 @@ public class HookController : MonoBehaviour
                 GameManager.Instance.fishOnHook = true;
             }
         }
-        // Debug.Log(other.gameObject.name + " is hooked");
     }
 }
