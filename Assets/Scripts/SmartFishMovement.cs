@@ -37,6 +37,15 @@ public class SmartFishMovement : MonoBehaviour
     private float originalMoveSpeed;
     private Fish currentTargetPrey = null; // Track current prey target
 
+    //Local wandering goal to simulate per-fish random behavior
+    private Vector2Int localWanderGoal;
+    private float localWanderTimer = 0f;
+    private float localWanderInterval = 3f; // change direction every few seconds
+
+    //cooldown to reduce jitter in random movement
+    private float moveDecisionCooldown = 0.25f; // how often to decide next tile
+    private float moveDecisionTimer = 0f;
+
     private void OnEnable()
     {
         Fish.OnFishHooked += PauseMovement;
@@ -61,11 +70,17 @@ public class SmartFishMovement : MonoBehaviour
 
         fish = GetComponent<Fish>();
         originalMoveSpeed = moveSpeed;
-
-        if (swimStyle == SwimStyle.Random)
-
-            // Set initial random destination
-            NewWayPoint(); 
+        
+        // if fish is out of bounds start with straight style
+         if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
+        {
+            swimStyle = SwimStyle.Straight;
+            Debug.Log("Fish spawned off-grid, starting in Straight mode.");
+        }
+        else if (swimStyle == SwimStyle.Random)
+        {
+            NewLocalWanderGoal(); 
+        }
 
         Debug.Log($"[SmartFish] Initial GridPos: {currentGridPos}, Grid Size: {diffusionGrid.width}x{diffusionGrid.height}");
     }
@@ -80,8 +95,8 @@ public class SmartFishMovement : MonoBehaviour
         // hasReachedGoal functionality may no longer be needed
         if (!isSwimming || hasReachedGoal) return;
 
-        // Handle predator-prey detection or tracking
-        if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
+        // Bounds Check (Maybe come back to this if having weird behavior on edges)
+        // if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
 
         // Handle predator-prey detection or tracking
         if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
@@ -104,7 +119,8 @@ public class SmartFishMovement : MonoBehaviour
                     globalTargetPrey = null;
                     swimStyle = SwimStyle.Random;
                     moveSpeed = originalMoveSpeed;
-                    NewWayPoint();
+                    // Reset Wander
+                    NewLocalWanderGoal(); 
                     Debug.Log("Prey left grid. Predator stops pursuit.");
                 }
             }
@@ -114,15 +130,19 @@ public class SmartFishMovement : MonoBehaviour
         if (!onGrid && diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
         {
             onGrid = true;
-            // Delay switch by swimToggleInterval (Had to look this up. )
+
+            // Had to get help with this one (LLM generated statement)
             Invoke(nameof(SwitchToRandomAfterGridEntry), swimToggleInterval); 
         }
+
+        //update cooldown timer
+        moveDecisionTimer -= Time.deltaTime;
 
         // Perform the active behavior
         switch (swimStyle)
         {
             case SwimStyle.Random:
-                RandomSwim();
+                DiffusionBasedRandomSwim(); 
                 break;
             case SwimStyle.GoalSeeking:
                 GoalSeek();
@@ -133,29 +153,65 @@ public class SmartFishMovement : MonoBehaviour
         }
     }
 
-    // Swim randomly to different waypoints
-    void RandomSwim()
+    // Swim using diffusion grid in Random mode
+    void DiffusionBasedRandomSwim()
     {
-        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f)
+        // Update local goal every few seconds
+        localWanderTimer -= Time.deltaTime;
+        if (localWanderTimer <= 0f)
         {
-            head.rotation = keepRotation;
-            if (directionChangeTimer <= 0f)
-            {
-                directionChangeTimer = directionChangeTime;
-                NewWayPoint();
-            }
-            else
-            {
-                directionChangeTimer -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            keepRotation = head.rotation;
-            TurnToWaypoint(targetWorldPosition);
+            NewLocalWanderGoal();
         }
 
+        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f && moveDecisionTimer <= 0f)
+        {
+            Vector2Int next = GetNextPositionToward(localWanderGoal);
+            if (next != currentGridPos)
+            {
+                currentGridPos = next;
+                targetWorldPosition = diffusionGrid.GridToWorld(next.x, next.y);
+                // reset decision timer
+                moveDecisionTimer = moveDecisionCooldown;  
+            }
+        }
+
+        TurnToWaypoint(targetWorldPosition);
         transform.position = Vector3.MoveTowards(transform.position, targetWorldPosition, moveSpeed * Time.deltaTime);
+    }
+
+    // Choose a local wander goal in grid space
+    void NewLocalWanderGoal()
+    {
+        int range = 5;
+        // Change this if we want the fish to be able to wander off the grid
+        int x = Mathf.Clamp(currentGridPos.x + Random.Range(-range, range + 1), 0, diffusionGrid.width - 1);
+        int y = Mathf.Clamp(currentGridPos.y + Random.Range(-range, range + 1), 0, diffusionGrid.height - 1);
+        localWanderGoal = new Vector2Int(x, y);
+        localWanderTimer = localWanderInterval;
+    }
+
+    // Get next position toward a specific goal (does not affect grid)
+    Vector2Int GetNextPositionToward(Vector2Int goal)
+    {
+        List<Vector2Int> neighbors = diffusionGrid.GetDirections();
+        Vector2Int bestPosition = currentGridPos;
+        float bestDist = float.MaxValue;
+
+        foreach (Vector2Int dir in neighbors)
+        {
+            int nx = currentGridPos.x + dir.x;
+            int ny = currentGridPos.y + dir.y;
+            if (!diffusionGrid.InBounds(nx, ny) || diffusionGrid.obstacles[nx, ny]) continue;
+
+            float dist = Vector2Int.Distance(new Vector2Int(nx, ny), goal);
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                bestPosition = new Vector2Int(nx, ny);
+            }
+        }
+
+        return bestPosition;
     }
 
     // Move toward the goal using the diffusion grid
@@ -179,7 +235,7 @@ public class SmartFishMovement : MonoBehaviour
                     Debug.Log("Prey caught and destroyed.");
 
                     // Start moving again
-                    NewWayPoint();
+                    NewLocalWanderGoal();
                     TurnToWaypoint(targetWorldPosition);
                     isSwimming = true;
                 }
@@ -284,16 +340,27 @@ public class SmartFishMovement : MonoBehaviour
         }
     }
 
-    // Visualize predator detection radius
-    void OnDrawGizmosSelected()
+    // Visualize predator detection radius (LLM generated gizmos)
+        // Visualize predator detection radius and local wander direction
+void OnDrawGizmosSelected()
+{   
+    // Predator detection radius
+    Fish f = GetComponent<Fish>();
+    if (f != null && f.fishInfo != null && !f.fishInfo.isPrey)
     {
-        Fish f = GetComponent<Fish>();
-        if (f != null && f.fishInfo != null && !f.fishInfo.isPrey)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
+
+    // draw line toward local wander goal (only in Random mode)
+    if (swimStyle == SwimStyle.Random && diffusionGrid != null)
+    {
+        Vector3 goalWorldPos = diffusionGrid.GridToWorld(localWanderGoal.x, localWanderGoal.y);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, goalWorldPos);
+        Gizmos.DrawSphere(goalWorldPos, 0.1f);
+    }
+}
 
     // One-time switch to Random after grid entry (only if not in prey pursuit)
     void SwitchToRandomAfterGridEntry()
@@ -302,7 +369,7 @@ public class SmartFishMovement : MonoBehaviour
         if (swimStyle != SwimStyle.GoalSeeking)
         {
             swimStyle = SwimStyle.Random;
-            NewWayPoint();
+            NewLocalWanderGoal();
             Debug.Log("Switched to Random after entering grid.");
         }
     }
