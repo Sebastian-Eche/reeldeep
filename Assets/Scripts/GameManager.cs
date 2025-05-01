@@ -7,46 +7,34 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set;}
-     [Header("Game Object References")]
     public CameraFollow cameraFollowObject;
     public HookController hookControllerObject;
     public FishMovement fishMovementObject;
-    public GameObject returnPoint;
-
-    [Header("UI Elements")]
-    public TextMeshProUGUI fishSpeciesText;
-    public TextMeshProUGUI fishMetaDataText;
-    public TextMeshProUGUI depthText;
-    private float depthScale = 2.5f;
-
-    [Header("Game State")]
     public bool minigameStart = false;
     public bool fishOnHook = false;
-    public bool isDisplayingInfo = false;
-
-    [Header("Fish Capture Tracking")]
-    [SerializeField] private List<Fish> fishCaught = new List<Fish>();
+    private List<Fish> fishCaught = new List<Fish>();
     public int maxAttempts = 2;
-    public int attemptsToCatch = 0;
     public event Action OnMaxAttemptsMade;
+    public GameObject returnPoint;
+    public TextMeshProUGUI fishSpeciesText;
+    public TextMeshProUGUI fishMetaDataText;
+    public bool isDisplayingInfo = false;
+    public int attemptsToCatch = 0;
     void Awake()
     {
         if (Instance == null){
             Instance = this;
         }
     }
-
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
     }
 
+    // Update is called once per frame
     void Update()
     {
-        if (hookControllerObject.gameObject.transform.position.y <= 0.1){
-            float depth = Mathf.Abs(hookControllerObject.gameObject.transform.position.y)/depthScale;
-            depthText.text = $"Depth: {depth:F1}m";
-        }
         
     }
 
@@ -54,12 +42,15 @@ public class GameManager : MonoBehaviour
         minigameStart = true;
         cameraFollowObject.enabled = false;
         hookControllerObject.isPaused = true;
+        // fishMovementObject.enabled = false;
     }
 
     public void EndMinigame(){
         minigameStart = false;
         cameraFollowObject.enabled = true;
+        // hookControllerObject.enabled = true;
         hookControllerObject.isPaused = false;
+        // fishMovementObject.enabled = true;
     }
 
     public void AddFish(Fish caughtFish){
@@ -99,7 +90,7 @@ public class GameManager : MonoBehaviour
         }
 
         for (int i = 0; i < fishCaught.Count; i++){
-            fishSpeciesText.text = "You caught a " + fishCaught[i].fishInfo.fishSpecies;
+            fishSpeciesText.text = "You caught a \n " + fishCaught[i].fishInfo.fishSpecies;
             fishMetaDataText.text = "Length: " + fishCaught[i].GetLength() + "in" + " Weight: " + fishCaught[i].GetWeight() + "lbs";
             yield return new WaitForSeconds(3);
         }

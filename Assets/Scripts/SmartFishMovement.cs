@@ -26,16 +26,6 @@ public class SmartFishMovement : MonoBehaviour
     public float behaviorSwitchInterval = 10f; // Time in seconds to switch behavior
     private float behaviorSwitchTimer;
 
-    private void OnEnable()
-    {
-        Fish.OnFishHooked += PauseMovement;
-    }
-
-    void OnDisable()
-    {
-        Fish.OnFishHooked -= PauseMovement;
-    }
-
     private void Start()
     {
         currFishX = transform.position.x;
@@ -66,9 +56,6 @@ public class SmartFishMovement : MonoBehaviour
 
     private void Update()
     {   
-        if (!GameManager.Instance.minigameStart){
-            isSwimming = true;
-        }
         currentGridPos = diffusionGrid.WorldToGrid(transform.position);
 
         if (!isSwimming || hasReachedGoal) return;
@@ -204,9 +191,7 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     // Public methods to pause/resume swimming
-    void PauseMovement(Fish hookedFish){
-        Debug.Log("PAUSEDDDD");
-        isSwimming = false;
-    }
+    public void PauseMovement() => isSwimming = false;
+    public void ResumeMovement() => isSwimming = true;
 }
 

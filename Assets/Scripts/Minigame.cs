@@ -5,34 +5,22 @@ using UnityEngine;
 
 public class Minigame : MonoBehaviour
 {
-    private Fish fishCurrHooked;
-    [Header("UI Elements")]
     public TextMeshProUGUI caughtFishDisplay;
-
-    [Header("Minigame Settings")]
     public float speed = 5f;
     private float maxSpeed;
-    private float speedModifier;
-    public float hitSpotBuffer = 0.15f;
-    private float minFishHitspotSize;
-    private float maxFishHitspotSize;
-
-    [Header("Minigame State")]
-    private bool minigameStart = false;
-    private bool continueRight = true;
-    private int amountOfMinigames = 3;
-    private int correctHits = 0;
-    private int missCounter = 0;
-
-    [Header("Minigame Objects")]
-    private GameObject indicator;
     private SpriteRenderer minigameBorder;
-    private SpriteRenderer hitSpot;
-
-    [Header("Position Bounds")]
+    private GameObject indicator;
     private float borderMinX, hitSpotMinX;
     private float borderMaxX, hitSpotMaxX;
-    private float randomHitspotSizeX;
+    private bool minigameStart = false;
+    private bool continueRight = true;
+    private SpriteRenderer hitSpot;
+    private int amountOfMinigames = 3;
+    private int correctHits = 0;
+    private Fish fishCurrHooked;
+    private float randomSizeX;
+    public float hitSpotBuffer = 0.15f;
+    private int missCounter = 0;
     private void OnEnable()
     {
         Fish.OnFishHooked += StartMinigame;
@@ -45,14 +33,12 @@ public class Minigame : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        minFishHitspotSize = 0.1f;
-        maxFishHitspotSize = 0.3f;
         minigameBorder = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         indicator = gameObject.transform.GetChild(0).GetChild(1).gameObject;
         hitSpot = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         borderMinX = minigameBorder.bounds.min.x + 1.5f;
         borderMaxX = minigameBorder.bounds.max.x - 1;
-        maxSpeed = speed + 2;
+        maxSpeed = speed + speed;
     }
 
     // Update is called once per frame
@@ -76,7 +62,6 @@ public class Minigame : MonoBehaviour
         fishCurrHooked = hookedFish;
         ChangeHitSpot();
         GameManager.Instance.IncrementAttempts();
-        CheckRarity();
     }
 
     void EndMinigame(){
@@ -92,7 +77,10 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        speedModifier += GameManager.Instance.CurrentFishCapacity();
+        if (GameManager.Instance.CurrentFishCapacity() > 2){
+            speed = 7 + (GameManager.Instance.CurrentFishCapacity() - 0.5f);
+        } //reset speed so the difficulty remains the same and speed doesn't increase exponentionally
+        maxSpeed = speed + speed - 5;
     }
 
     void MoveIndicator(){
@@ -154,8 +142,8 @@ public class Minigame : MonoBehaviour
 
     void ChangeSizeOfHitSpot(){
         //changes the size in this case the scale of hit spot to make it narrow or wider
-        randomHitspotSizeX = UnityEngine.Random.Range(minFishHitspotSize, maxFishHitspotSize); //0.1, 0.3
-        hitSpot.gameObject.transform.localScale = new Vector3(randomHitspotSizeX, 0.44f, 0);
+        randomSizeX = UnityEngine.Random.Range(0.1f, 0.3f);
+        hitSpot.gameObject.transform.localScale = new Vector3(randomSizeX, 0.44f, 0);
     }
 
     void ChangeIndicatorSpeed(){
@@ -171,38 +159,6 @@ public class Minigame : MonoBehaviour
             Debug.Log("helper activated");
             speed -= 1;
         }
-    }
-
-    void CheckRarity(){
-        switch (fishCurrHooked.fishInfo.rarity){
-            case FishInfo.Rarity.Common:
-                speed = 6f;
-                maxSpeed = 8f;
-                minFishHitspotSize = 0.1f;
-                maxFishHitspotSize = 0.3f;
-                break;
-            case FishInfo.Rarity.Uncommon:
-                speed = 9f;
-                maxSpeed = 12f;
-                minFishHitspotSize = 0.1f;
-                maxFishHitspotSize = 0.2f;
-                break;
-            case FishInfo.Rarity.Rare:
-                speed = 13f;
-                maxSpeed = 16f;
-                minFishHitspotSize = 0.1f;
-                maxFishHitspotSize = 0.16f;
-                break;
-            case FishInfo.Rarity.Legendary:
-                speed = 17f;
-                maxSpeed = 21f;
-                minFishHitspotSize = 0.1f;
-                maxFishHitspotSize = 0.13f;
-                break;
-        }
-        speed += speedModifier;
-        maxSpeed += speedModifier;
-        Debug.Log(fishCurrHooked.fishInfo.rarity);
     }
 
     IEnumerator RemoveDisplay(){

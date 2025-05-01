@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -8,14 +7,10 @@ public class HookController : MonoBehaviour
     public Camera mainCamera;
     private float startingY;
     public float descendSpeed = 4f;
-    private float regularDescendSpeed = 0;
     private bool hookStopped = false;
-    private bool hookAccelerated = false;
     public bool isPaused = false;
     private bool isReturning = false;
     private Transform boatPOS;
-    private float returningTimer = 3f;
-    private float returnSpeed = 4f;
 
     private void OnDisable()
     {
@@ -24,7 +19,6 @@ public class HookController : MonoBehaviour
 
     void Start()
     {
-        regularDescendSpeed = descendSpeed;
         startingY = transform.position.y;
         GameManager.Instance.OnMaxAttemptsMade += ReturnToBoat;
         Debug.Log("EVENT SUBSCRIBED");
@@ -52,7 +46,9 @@ public class HookController : MonoBehaviour
         FollowMouse();
         if(Input.GetKeyDown(KeyCode.LeftShift)){
             AccelerateHook();
-        } 
+        }else if(Input.GetKeyUp(KeyCode.LeftShift)){
+            descendSpeed = 4f;
+        }
 
         if(Input.GetKeyDown(KeyCode.LeftControl)){
             StopHook();
@@ -66,10 +62,11 @@ public class HookController : MonoBehaviour
         float rightBounds = mainCamera.transform.position.x + cameraWidth;
 
         Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, leftBounds, rightBounds);
+        mouseWorldPosition.x = Mathf.Clamp(mouseWorldPosition.x, leftBounds, rightBounds); //change hardcoded values of -10 to 10 to camera bounds
         startingY -= descendSpeed * Time.deltaTime;
         Vector3 newPosition = new Vector3(mouseWorldPosition.x, startingY, 0f);
         transform.DOMove(newPosition, 0.63f).SetEase(Ease.OutSine);
+        // Debug.Log(transform.position);
     }
 
     void StopHook(){
@@ -79,17 +76,12 @@ public class HookController : MonoBehaviour
         if (hookStopped){
             descendSpeed = 0f;
         }else{
-            descendSpeed = regularDescendSpeed;
+            descendSpeed = 4f;
         }
     }
 
     void AccelerateHook(){
-        hookAccelerated = !hookAccelerated;
-        if (hookAccelerated){
-            descendSpeed *= 2.2f;
-        }else{
-            descendSpeed = regularDescendSpeed;
-        }
+        descendSpeed *= 2.2f;
     }
 
     void ReturnToBoat(){
@@ -98,33 +90,17 @@ public class HookController : MonoBehaviour
     }
 
     void Returning(){
-        if (returningTimer <= 0) {
-            returnSpeed += 5f * Time.deltaTime;
-            Debug.Log("Retunr Speed: " + returnSpeed);
-        }
-        returningTimer -= Time.deltaTime;
-        float step = returnSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, step);
-        gameObject.GetComponent<Collider2D>().enabled = false;
+        transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, descendSpeed * Time.deltaTime);
     }
 
     bool ReachedBoat(){
         if ((boatPOS.position - transform.position).magnitude < 0.1f){
-            returningTimer = 3f;
+            // Debug.Log("Boat Reached");
             isReturning = false;
-            returnSpeed = 4f;
             startingY = boatPOS.position.y;
-            gameObject.GetComponent<Collider2D>().enabled = true;
             return true;
         }
         return false;
-    }
-
-    IEnumerator SkipNearReturnPoint(){
-        yield return new WaitForSeconds(3);
-        if (transform.position.y <= -40){
-            transform.position = new Vector3(0, -10, 0);
-        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -136,5 +112,6 @@ public class HookController : MonoBehaviour
                 GameManager.Instance.fishOnHook = true;
             }
         }
+        // Debug.Log(other.gameObject.name + " is hooked");
     }
 }
