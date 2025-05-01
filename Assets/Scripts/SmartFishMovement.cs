@@ -43,7 +43,7 @@ public class SmartFishMovement : MonoBehaviour
     private float localWanderInterval = 3f; // change direction every few seconds
 
     //cooldown to reduce jitter in random movement
-    private float moveDecisionCooldown = 0.25f; // how often to decide next tile
+    private float moveDecisionCooldown = 0.5f; // how often to decide next tile
     private float moveDecisionTimer = 0f;
 
     private void OnEnable()
@@ -127,14 +127,18 @@ public class SmartFishMovement : MonoBehaviour
         }
 
         // Logic for switching between straight and random after reaching the grid
-        if (!onGrid && diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
+       if (swimStyle == SwimStyle.Straight && diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
         {
             onGrid = true;
 
-            // Had to get help with this one (LLM generated statement)
-            Invoke(nameof(SwitchToRandomAfterGridEntry), swimToggleInterval); 
+            swimStyle = SwimStyle.Random;
+            NewLocalWanderGoal();
+            Vector2Int next = GetNextPositionToward(localWanderGoal); // NEW
+            targetWorldPosition = diffusionGrid.GridToWorld(next.x, next.y); // NEW
+            Debug.Log("Fish entered grid and switched from Straight to Random.");
+ 
         }
-
+        
         //update cooldown timer
         moveDecisionTimer -= Time.deltaTime;
 
@@ -163,7 +167,7 @@ public class SmartFishMovement : MonoBehaviour
             NewLocalWanderGoal();
         }
 
-        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f && moveDecisionTimer <= 0f)
+        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.05f && moveDecisionTimer <= 0f)
         {
             Vector2Int next = GetNextPositionToward(localWanderGoal);
             if (next != currentGridPos)
@@ -340,7 +344,7 @@ public class SmartFishMovement : MonoBehaviour
         }
     }
 
-    // Visualize predator detection radius (LLM generated gizmos)
+    // Visualize predator detection radius (LLM generated)
         // Visualize predator detection radius and local wander direction
 void OnDrawGizmosSelected()
 {   
