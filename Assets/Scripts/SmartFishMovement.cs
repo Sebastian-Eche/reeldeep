@@ -184,15 +184,24 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     // Choose a local wander goal in grid space
-    void NewLocalWanderGoal()
+   void NewLocalWanderGoal()
     {
-        int range = 5;
-        // Change this if we want the fish to be able to wander off the grid
-        int x = Mathf.Clamp(currentGridPos.x + Random.Range(-range, range + 1), 0, diffusionGrid.width - 1);
-        int y = Mathf.Clamp(currentGridPos.y + Random.Range(-range, range + 1), 0, diffusionGrid.height - 1);
+        int buffer = 2; // margin from the edge to avoid selecting border tiles
+        int range = 10;
+
+        int minX = Mathf.Max(buffer, currentGridPos.x - range);
+        int maxX = Mathf.Min(diffusionGrid.width - 1 - buffer, currentGridPos.x + range);
+
+        int minY = Mathf.Max(buffer, currentGridPos.y - range);
+        int maxY = Mathf.Min(diffusionGrid.height - 1 - buffer, currentGridPos.y + range);
+
+        int x = Random.Range(minX, maxX + 1);
+        int y = Random.Range(minY, maxY + 1);
+
         localWanderGoal = new Vector2Int(x, y);
         localWanderTimer = localWanderInterval;
-    }
+    }       
+
 
     // Get next position toward a specific goal (does not affect grid)
     Vector2Int GetNextPositionToward(Vector2Int goal)
