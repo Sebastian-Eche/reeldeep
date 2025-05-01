@@ -5,23 +5,34 @@ using UnityEngine;
 
 public class Minigame : MonoBehaviour
 {
+    private Fish fishCurrHooked;
+    [Header("UI Elements")]
     public TextMeshProUGUI caughtFishDisplay;
+
+    [Header("Minigame Settings")]
     public float speed = 5f;
     private float maxSpeed;
     private float speedModifier;
-    private SpriteRenderer minigameBorder;
-    private GameObject indicator;
-    private float borderMinX, hitSpotMinX;
-    private float borderMaxX, hitSpotMaxX;
+    public float hitSpotBuffer = 0.15f;
+    private float minFishHitspotSize;
+    private float maxFishHitspotSize;
+
+    [Header("Minigame State")]
     private bool minigameStart = false;
     private bool continueRight = true;
-    private SpriteRenderer hitSpot;
     private int amountOfMinigames = 3;
     private int correctHits = 0;
-    private Fish fishCurrHooked;
-    private float randomSizeX;
-    public float hitSpotBuffer = 0.15f;
     private int missCounter = 0;
+
+    [Header("Minigame Objects")]
+    private GameObject indicator;
+    private SpriteRenderer minigameBorder;
+    private SpriteRenderer hitSpot;
+
+    [Header("Position Bounds")]
+    private float borderMinX, hitSpotMinX;
+    private float borderMaxX, hitSpotMaxX;
+    private float randomHitspotSizeX;
     private void OnEnable()
     {
         Fish.OnFishHooked += StartMinigame;
@@ -34,6 +45,8 @@ public class Minigame : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        minFishHitspotSize = 0.1f;
+        maxFishHitspotSize = 0.3f;
         minigameBorder = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
         indicator = gameObject.transform.GetChild(0).GetChild(1).gameObject;
         hitSpot = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
@@ -141,8 +154,8 @@ public class Minigame : MonoBehaviour
 
     void ChangeSizeOfHitSpot(){
         //changes the size in this case the scale of hit spot to make it narrow or wider
-        randomSizeX = UnityEngine.Random.Range(0.1f, 0.3f);
-        hitSpot.gameObject.transform.localScale = new Vector3(randomSizeX, 0.44f, 0);
+        randomHitspotSizeX = UnityEngine.Random.Range(minFishHitspotSize, maxFishHitspotSize); //0.1, 0.3
+        hitSpot.gameObject.transform.localScale = new Vector3(randomHitspotSizeX, 0.44f, 0);
     }
 
     void ChangeIndicatorSpeed(){
@@ -165,18 +178,26 @@ public class Minigame : MonoBehaviour
             case FishInfo.Rarity.Common:
                 speed = 6f;
                 maxSpeed = 8f;
+                minFishHitspotSize = 0.1f;
+                maxFishHitspotSize = 0.3f;
                 break;
             case FishInfo.Rarity.Uncommon:
                 speed = 9f;
                 maxSpeed = 12f;
+                minFishHitspotSize = 0.1f;
+                maxFishHitspotSize = 0.2f;
                 break;
             case FishInfo.Rarity.Rare:
                 speed = 13f;
                 maxSpeed = 16f;
+                minFishHitspotSize = 0.1f;
+                maxFishHitspotSize = 0.16f;
                 break;
             case FishInfo.Rarity.Legendary:
                 speed = 17f;
                 maxSpeed = 21f;
+                minFishHitspotSize = 0.1f;
+                maxFishHitspotSize = 0.13f;
                 break;
         }
         speed += speedModifier;
