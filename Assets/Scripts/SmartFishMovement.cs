@@ -99,7 +99,7 @@ public class SmartFishMovement : MonoBehaviour
         // if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
 
         // Handle predator-prey detection or tracking
-        if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
+        if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey && fish.GetWeightInStomach() < fish.fishInfo.maxStomachWeight)
         {
             if (currentTargetPrey == null)
             {
@@ -240,6 +240,11 @@ public class SmartFishMovement : MonoBehaviour
                 if (currentTargetPrey != null)
                 {
                     // Despawn the prey and switch back to normal movement patterns
+                    // HERE WE ADD WEIGHT OF TARGET PREY TO PREDATOR
+                    Debug.Log(currentTargetPrey);
+                    if (!fish.fishInfo.isPrey){
+                        fish.AddWeightToStomach(currentTargetPrey.GetWeight());
+                    }
                     Destroy(currentTargetPrey.gameObject); 
                     currentTargetPrey = null;
                     globalTargetPrey = null;

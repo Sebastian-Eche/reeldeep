@@ -9,6 +9,7 @@ public class Fish : MonoBehaviour
     private float weight;
     private float length;
     private int rarity;
+    [SerializeField] private float weightInStomach;
     public static event Action<Fish> OnFishHooked;
 
 
@@ -43,6 +44,14 @@ public class Fish : MonoBehaviour
 
     public float GetLength(){
         return length;
+    }
+
+    public void  AddWeightToStomach(float weight){
+        weightInStomach += weight;
+    }
+
+    public float GetWeightInStomach(){
+        return weightInStomach;
     }
 
 }
