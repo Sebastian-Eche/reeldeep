@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public void PlayGame(){
-        SceneManager.LoadScene("PlayTest");
+        SceneManager.LoadScene("FishEncyclopedia");
+
     }
 
     public void QuitGame(){

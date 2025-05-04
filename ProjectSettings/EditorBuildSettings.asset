@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 87b34dc171c09034f9d00a09b2415e34
   - enabled: 1
-    path: Assets/Scenes/PlayTest.unity
-    guid: 6952364fffe52464ea21b77be0df0d63
+    path: Assets/Scenes/FishEncyclopedia.unity
+    guid: 707b5486a2473db4c8d1a1a06ad85a91
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
