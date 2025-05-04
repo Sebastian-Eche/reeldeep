@@ -93,6 +93,7 @@ public class Minigame : MonoBehaviour
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
         speedModifier += GameManager.Instance.CurrentFishCapacity();
+        GameManager.Instance.CaughtFishText();
     }
 
     void MoveIndicator(){

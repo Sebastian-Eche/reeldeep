@@ -16,6 +16,10 @@ public class Fish : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SpriteRenderer currFishSprite = gameObject.GetComponent<SpriteRenderer>();
+        currFishSprite.sprite = fishInfo.fishSprite;
+        
+
         if (fishInfo != null){
             weight = (float)Math.Round(UnityEngine.Random.Range(fishInfo.minWeight, fishInfo.maxWeight), 2); 
             length = (float)Math.Round(UnityEngine.Random.Range(fishInfo.minLength, fishInfo.maxLength), 2);
@@ -52,6 +56,19 @@ public class Fish : MonoBehaviour
 
     public float GetWeightInStomach(){
         return weightInStomach;
+    }
+
+    private void SetRarityColor(){
+        switch (fishInfo.rarity){
+            case FishInfo.Rarity.Common:
+                break;
+            case FishInfo.Rarity.Uncommon:
+                break;
+            case FishInfo.Rarity.Rare:
+                break;
+            case FishInfo.Rarity.Legendary:
+                break;
+        }
     }
 
 }

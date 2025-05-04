@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cadc99f5e0314fb63ae5c11ea34ca, type: 3}
   m_Name: Rockfish
   m_EditorClassIdentifier: 
+  rarity: 0
   fishSpecies: Cabezon
   minWeight: 1
   maxWeight: 7
   minLength: 7
   maxLength: 25
-  rarity: 0
+  maxStomachWeight: 0
   habitat: 
   isPrey: 1
   fishSprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
