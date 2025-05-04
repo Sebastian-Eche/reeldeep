@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 4538109504449516121}
   - component: {fileID: 5664829661980152870}
   m_Layer: 0
-  m_Name: Rare Fish
+  m_Name: Rare Fish_Left
   m_TagString: Fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,9 @@ MonoBehaviour:
   swimStyle: 0
   moveSpeed: 3
   head: {fileID: 6047129281320713321}
+  endPoint: {fileID: 216284642436504734}
   diffusionGrid: {fileID: 0}
   currentGridPos: {x: 0, y: 0}
   directionChangeTime: 3
-  behaviorSwitchInterval: 10
+  swimToggleInterval: 2
+  detectionRadius: 5

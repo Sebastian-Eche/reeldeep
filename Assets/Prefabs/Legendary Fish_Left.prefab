@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 3763167615777624168}
   - component: {fileID: 1098499580967010608}
   m_Layer: 0
-  m_Name: Legendary Fish
+  m_Name: Legendary Fish_Left
   m_TagString: Fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,9 @@ MonoBehaviour:
   swimStyle: 0
   moveSpeed: 3
   head: {fileID: 3878756405844113329}
+  endPoint: {fileID: 4506635962572894887}
   diffusionGrid: {fileID: 0}
   currentGridPos: {x: 0, y: 0}
   directionChangeTime: 3
-  behaviorSwitchInterval: 10
+  swimToggleInterval: 2
+  detectionRadius: 5

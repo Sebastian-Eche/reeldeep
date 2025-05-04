@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8173653927629896263}
   - component: {fileID: 831489283467484651}
   - component: {fileID: 847490154530302451}
+  - component: {fileID: 46730031618318535}
   m_Layer: 0
   m_Name: Uncommon_Random
   m_TagString: Fish
@@ -208,7 +209,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8266734584648281515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -219,3 +220,24 @@ MonoBehaviour:
   head: {fileID: 7570194552986552725}
   moveSpeed: 6
   directionChangeTime: 3
+--- !u!114 &46730031618318535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266734584648281515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923a9e102571246d18fb29a234db9395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swimStyle: 2
+  moveSpeed: 3
+  head: {fileID: 7570194552986552725}
+  endPoint: {fileID: 2243242621498904481}
+  diffusionGrid: {fileID: 0}
+  currentGridPos: {x: 0, y: 0}
+  directionChangeTime: 3
+  swimToggleInterval: 2
+  detectionRadius: 5

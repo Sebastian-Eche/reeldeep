@@ -30,8 +30,28 @@ namespace Junchen_Edit
         [Header("Cleanup Settings")]
         public float cleanupOffsetY = 7f; // Vertical offset above camera after which fish will be destroyed
 
+        private DiffusionGrid diffusionGrid; // Reference to the background diffusion grid
+
         void Start()
         {
+            GameObject bg = GameObject.Find("Background");
+            if (bg != null)
+            {
+                diffusionGrid = bg.GetComponent<DiffusionGrid>();
+                if (diffusionGrid != null)
+                {
+                StartCoroutine(GenerateFishLoop());
+                }
+                else
+                {
+                    Debug.LogError("[FishGenerator] Background GameObject found, but DiffusionGrid component is missing.");
+                }
+            }
+            else
+            {
+                Debug.LogError("[FishGenerator] No GameObject named 'Background' found in the scene.");
+            }
+
             StartCoroutine(GenerateFishLoop());
         }
 
@@ -70,8 +90,9 @@ namespace Junchen_Edit
                     GameObject fish = Instantiate(prefab);
                     fish.transform.position = spawnPos.Value;
 
-                    FishMovement instanceFm = fish.GetComponent<FishMovement>();
-                    if (instanceFm.swimStyle == FishMovement.SwimStyle.Straight)
+                    SmartFishMovement instanceFm = fish.GetComponent<SmartFishMovement>();
+                    instanceFm.diffusionGrid = diffusionGrid;
+                    if (instanceFm.swimStyle == SmartFishMovement.SwimStyle.Straight)
                     {
                         Transform wp = fish.transform.GetChild(0);
                         instanceFm.endPoint = wp;
