@@ -1861,7 +1861,7 @@ Transform:
   m_GameObject: {fileID: 941790740}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -6.1, y: -39.6, z: 0}
+  m_LocalPosition: {x: -19.77, y: -25.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3394,13 +3394,15 @@ MonoBehaviour:
   cameraFollowObject: {fileID: 519420033}
   hookControllerObject: {fileID: 1151498011}
   fishMovementObject: {fileID: 2074909099}
-  minigameStart: 0
-  fishOnHook: 0
-  maxAttempts: 3
   returnPoint: {fileID: 251599552}
   fishSpeciesText: {fileID: 912979836}
   fishMetaDataText: {fileID: 1009348076}
+  depthText: {fileID: 0}
+  minigameStart: 0
+  fishOnHook: 0
   isDisplayingInfo: 0
+  fishCaught: []
+  maxAttempts: 3
   attemptsToCatch: 0
 --- !u!1001 &3486254266588179318
 PrefabInstance:
