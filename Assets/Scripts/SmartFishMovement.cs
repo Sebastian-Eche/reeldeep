@@ -6,7 +6,7 @@ public class SmartFishMovement : MonoBehaviour
     public enum SwimStyle { Random, GoalSeeking, Straight }
     public SwimStyle swimStyle = SwimStyle.Straight; // Starting behavior
 
-    public float moveSpeed = 3f;
+    public float moveSpeed = 5f;
     public Transform head;
     public Transform endPoint;
 
@@ -57,7 +57,21 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     private void Start()
-    {
+    {   
+        if (diffusionGrid == null)
+        {
+            GameObject bg = GameObject.Find("Background");
+            if (bg != null)
+                diffusionGrid = bg.GetComponent<DiffusionGrid>();
+    
+            if (diffusionGrid == null)
+            {
+                Debug.LogWarning("[SmartFishMovement] diffusionGrid is not set. Delaying Start().");
+                return; // early out
+            }
+        }
+
+
         currFishX = transform.position.x;
         currFishY = transform.position.y;
         directionChangeTimer = directionChangeTime;
@@ -86,7 +100,7 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   if (diffusionGrid == null) return;
         if (!GameManager.Instance.minigameStart){
             isSwimming = true;
         }
