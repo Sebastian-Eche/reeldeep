@@ -104,7 +104,7 @@ public class SmartFishMovement : MonoBehaviour
         if (!GameManager.Instance.minigameStart){
             isSwimming = true;
         }
-        currentGridPos = diffusionGrid.WorldToGrid(transform.position);
+        // currentGridPos = diffusionGrid.WorldToGrid(transform.position);
 
         // hasReachedGoal functionality may no longer be needed
         if (!isSwimming || hasReachedGoal) return;
@@ -181,7 +181,7 @@ public class SmartFishMovement : MonoBehaviour
             NewLocalWanderGoal();
         }
 
-        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.05f && moveDecisionTimer <= 0f)
+        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f && moveDecisionTimer <= 0f)
         {
             Vector2Int next = GetNextPositionToward(localWanderGoal);
             if (next != currentGridPos)
