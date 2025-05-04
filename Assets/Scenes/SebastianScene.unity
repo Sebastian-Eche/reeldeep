@@ -2207,6 +2207,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fish Caught Display
       objectReference: {fileID: 0}
+    - target: {fileID: 3309314864176544541, guid: c54828b211c34c54781978a16e22d4df, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881743300593465426, guid: c54828b211c34c54781978a16e22d4df, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881743300593465426, guid: c54828b211c34c54781978a16e22d4df, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 179.0708
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881743300593465426, guid: c54828b211c34c54781978a16e22d4df, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881743300593465426, guid: c54828b211c34c54781978a16e22d4df, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7178121935892618667, guid: c54828b211c34c54781978a16e22d4df, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

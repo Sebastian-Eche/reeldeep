@@ -100,12 +100,16 @@ public class HookController : MonoBehaviour
     void Returning(){
         if (returningTimer <= 0) {
             returnSpeed += 5f * Time.deltaTime;
-            Debug.Log("Retunr Speed: " + returnSpeed);
         }
         returningTimer -= Time.deltaTime;
         float step = returnSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, step);
         gameObject.GetComponent<Collider2D>().enabled = false;
+
+        if ((boatPOS.position - transform.position).magnitude < 25f){
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, 2f * Time.deltaTime);
+        }
+
     }
 
     bool ReachedBoat(){
@@ -119,6 +123,10 @@ public class HookController : MonoBehaviour
         }
         return false;
     }
+
+    public void MakeHookBig(){
+        transform.localScale = Vector3.one;
+    } 
 
     IEnumerator SkipNearReturnPoint(){
         yield return new WaitForSeconds(3);

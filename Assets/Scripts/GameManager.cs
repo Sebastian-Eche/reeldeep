@@ -95,7 +95,9 @@ public class GameManager : MonoBehaviour
     public IEnumerator DisplayCaughtFish(){
         fishSpeciesText.gameObject.SetActive(true);
         fishMetaDataText.gameObject.SetActive(true);
-        fishSprite.gameObject.SetActive(true);
+        if (fishCaught.Count > 0){
+            fishSprite.gameObject.SetActive(true);
+        }
         if (fishCaught.Count <= 0){
             fishSpeciesText.text = "NO FISH CAUGHT \n";
             fishMetaDataText.text = ":(";
@@ -114,6 +116,7 @@ public class GameManager : MonoBehaviour
         isDisplayingInfo = false;
         attemptsToCatch = 0;
         fishCaught = new List<Fish>();
+        hookControllerObject.MakeHookBig();
     }
 
     public void IncrementAttempts(){

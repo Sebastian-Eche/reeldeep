@@ -201,6 +201,7 @@ public class Minigame : MonoBehaviour
                 maxFishHitspotSize = 0.13f;
                 break;
         }
+        
         speed += speedModifier;
         maxSpeed += speedModifier;
         Debug.Log(fishCurrHooked.fishInfo.rarity);
