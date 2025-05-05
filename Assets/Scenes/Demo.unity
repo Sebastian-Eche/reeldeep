@@ -150,6 +150,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &87467059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 87467061}
+  - component: {fileID: 87467060}
+  m_Layer: 0
+  m_Name: Habitat Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &87467060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87467059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d897271f9050cbd438d81cbbdbdd2f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background: {fileID: 258860462}
+  allHabitatPrefabs:
+  - {fileID: 1200214501565597140, guid: c509774bda441ce44a8abb536f4d0544, type: 3}
+  - {fileID: 3635466650194598071, guid: ae85621da1a6d4943868850c98a4068c, type: 3}
+  - {fileID: 6859793307384014433, guid: b6d95c4a66a3cbc4180a6dc4fea62cea, type: 3}
+  minPerZone: 30
+  maxPerZone: 50
+--- !u!4 &87467061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87467059}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6.34, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &184375561
 GameObject:
   m_ObjectHideFlags: 0
@@ -2019,6 +2070,7 @@ SceneRoots:
   - {fileID: 23475855}
   - {fileID: 2084631828}
   - {fileID: 388623443}
+  - {fileID: 87467061}
   - {fileID: 1463931375}
   - {fileID: 1784515951}
   - {fileID: 184375562}
