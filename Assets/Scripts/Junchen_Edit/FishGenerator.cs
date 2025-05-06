@@ -43,8 +43,6 @@ namespace Junchen_Edit
             { Rarity.Legendary,  new List<GameObject>() },
         };
 
-
-
         void Start()
         {
             GameObject bg = GameObject.Find("Background");
@@ -65,7 +63,7 @@ namespace Junchen_Edit
                 Debug.LogError("[FishGenerator] No GameObject named 'Background' found in the scene.");
             }
 
-            //  Sory the prefabs into their respective lists
+            //  Sort the prefabs into their respective lists
             foreach (var prefab in fishPrefabs)
             {
                 var info = prefab.GetComponent<Fish>().fishInfo;   
