@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.43529412, g: 0.84313726, b: 0.44313726, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -210,6 +210,8 @@ MonoBehaviour:
   directionChangeTime: 3
   swimToggleInterval: 2
   detectionRadius: 5
+  rotationSpeed: 180
+  angleDeadZone: 2
 --- !u!1 &4629905255289295073
 GameObject:
   m_ObjectHideFlags: 0
