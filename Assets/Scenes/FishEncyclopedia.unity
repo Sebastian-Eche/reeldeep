@@ -1023,6 +1023,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1463254738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1252276017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1252276018}
+  m_Layer: 0
+  m_Name: ReturnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1252276018
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252276017}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1, y: 12.1, z: -0.6211628}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1358377064
 GameObject:
   m_ObjectHideFlags: 0
@@ -1604,13 +1635,15 @@ MonoBehaviour:
   cameraFollowObject: {fileID: 519420033}
   hookControllerObject: {fileID: 1151498011}
   fishMovementObject: {fileID: 2074909099}
-  minigameStart: 0
-  fishOnHook: 0
-  maxAttempts: 2
-  returnPoint: {fileID: 0}
+  returnPoint: {fileID: 1252276017}
   fishSpeciesText: {fileID: 0}
   fishMetaDataText: {fileID: 0}
+  depthText: {fileID: 0}
+  minigameStart: 0
+  fishOnHook: 1
   isDisplayingInfo: 0
+  fishCaught: []
+  maxAttempts: 3
   attemptsToCatch: 0
 --- !u!1001 &7940229484933959111
 PrefabInstance:
@@ -1700,6 +1733,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4846892825927252747, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 12.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519811227755348511, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -22.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541650265070518705, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541650265070518705, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541650265070518705, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 45.6847
+      objectReference: {fileID: 0}
+    - target: {fileID: 6541650265070518705, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -201.58
+      objectReference: {fileID: 0}
     - target: {fileID: 7768383980420029197, guid: 8b00531d5031e43498d0161d607fda25, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -1770,6 +1847,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 2119219974}
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1057684067}
@@ -1778,7 +1856,7 @@ SceneRoots:
   - {fileID: 1571852733}
   - {fileID: 2074909097}
   - {fileID: 1463254738}
-  - {fileID: 2119219974}
   - {fileID: 7940229484933959111}
   - {fileID: 1358377067}
   - {fileID: 8772025588848319083}
+  - {fileID: 1252276018}

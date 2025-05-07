@@ -1,42 +1,55 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FishMannager : MonoBehaviour
 {
-
-    public GameObject fishSlotPrefab; 
-    public Transform fishSlotParent; 
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("UI Elements")]
     public GameObject fishEncyclopediaUI;
-        private bool isFishEncyclopediaOpen = false;
+    public GameObject fishSlotPrefab;
+    public Transform fishSlotParent;
 
+    private bool isFishEncyclopediaOpen = false;
+    private HashSet<FishInfo> caughtFish = new HashSet<FishInfo>();
+    public FishDescription fishDescriptionPanel;
 
-
-// this is to toggle encylopedia with button. 
-        public void ToggleFishEncyclopedia()
-        {
-            isFishEncyclopediaOpen = !isFishEncyclopediaOpen;
-            fishEncyclopediaUI.SetActive(isFishEncyclopediaOpen);
-        }
-
-
-// use this so when user presses on the I key it will open the Fish Encylopedia 
-    public void Update()
+    private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.I) && isFishEncyclopediaOpen)
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            Time.timeScale = 1;
-            fishEncyclopediaUI.SetActive(false);
-            isFishEncyclopediaOpen = false;
-
-        }
-       else if (Input.GetKeyDown(KeyCode.I) && !isFishEncyclopediaOpen)
-        {
-            Time.timeScale= 0;
-            isFishEncyclopediaOpen = !isFishEncyclopediaOpen;
-            fishEncyclopediaUI.SetActive(isFishEncyclopediaOpen);
+            ToggleFishEncyclopedia();
         }
     }
 
+    public void ToggleFishEncyclopedia()
+    {
+        isFishEncyclopediaOpen = !isFishEncyclopediaOpen;
+        fishEncyclopediaUI.SetActive(isFishEncyclopediaOpen);
+
+        // Pause/unpause game when encyclopedia is toggled
+        Time.timeScale = isFishEncyclopediaOpen ? 0 : 1;
+    }
+
+   public void AddCaughtFish(FishInfo info)
+{
+    if (caughtFish.Contains(info))
+        return;
+
+    GameObject slot = Instantiate(fishSlotPrefab, fishSlotParent);
+    FishSlot slotScript = slot.GetComponent<FishSlot>();
+
+    if (slotScript != null)
+    {
+        
+        slotScript.Initialize(info, fishDescriptionPanel);
+    }
+    else
+    {
+        Debug.LogWarning("FishSlot script is missing on the prefab!");
+    }
+
+    caughtFish.Add(info);
+}
+
+
+    
 }

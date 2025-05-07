@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Minigame : MonoBehaviour
 {
+    private FishMannager fishManager;
     private Fish fishCurrHooked;
     [Header("UI Elements")]
     public TextMeshProUGUI caughtFishDisplay;
@@ -53,6 +54,7 @@ public class Minigame : MonoBehaviour
         borderMinX = minigameBorder.bounds.min.x + 1.5f;
         borderMaxX = minigameBorder.bounds.max.x - 1;
         maxSpeed = speed + 2;
+        fishManager = FindObjectOfType<FishMannager>();
     }
 
     // Update is called once per frame
@@ -83,6 +85,7 @@ public class Minigame : MonoBehaviour
         if (correctHits >= amountOfMinigames)
         {
             GameManager.Instance.AddFish(fishCurrHooked);
+            fishManager.AddCaughtFish(fishCurrHooked.fishInfo);
         }else{
             GameManager.Instance.ReturningToBoat();
         }
