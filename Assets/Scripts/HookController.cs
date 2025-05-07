@@ -119,6 +119,7 @@ public class HookController : MonoBehaviour
             returnSpeed = 4f;
             startingY = boatPOS.position.y;
             gameObject.GetComponent<Collider2D>().enabled = true;
+            GameManager.Instance.attemptsToCatch = 0;
             return true;
         }
         return false;
@@ -144,5 +145,14 @@ public class HookController : MonoBehaviour
                 GameManager.Instance.fishOnHook = true;
             }
         }
+        if (other.gameObject.CompareTag("Habitats")){
+            GameManager.Instance.habitatHit.gameObject.SetActive(true);
+            GameManager.Instance.habitatHit.text = "-1 ATTEMPTS";
+            StartCoroutine(GameManager.Instance.RemoveDisplay());
+            GameManager.Instance.attemptsToCatch++;
+            Destroy(other.gameObject);
+            GameManager.Instance.ReturningToBoat();
+        }
+        Debug.Log(GameManager.Instance.attemptsToCatch);
     }
 }
