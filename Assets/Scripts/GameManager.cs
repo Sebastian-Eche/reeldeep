@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -140,6 +141,8 @@ public class GameManager : MonoBehaviour
         attemptsToCatch = 0;
         fishCaught = new List<Fish>();
         hookControllerObject.MakeHookBig();
+        String currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
     }
 
     public void IncrementAttempts(){

@@ -113,6 +113,7 @@ namespace Junchen_Edit
         // Determines the correct zone based on camera Y position
         private DepthZone GetZone(float y)
         {
+            y = y / 2.5f;
             if (y >= shallowMin)
                 return DepthZone.Shallow;
             else if (y >= midMin)

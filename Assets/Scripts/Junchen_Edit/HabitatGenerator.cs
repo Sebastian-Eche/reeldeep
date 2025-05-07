@@ -22,9 +22,15 @@ namespace Junchen_Edit
 
         private List<GameObject> spawnedHabitats = new(); // Track spawned habitat instances
 
+        void OnDisable()
+        {
+            GameManager.Instance.OnBackgroundChange -= RegenerateHabitats;
+        }
+
         // Called when the scene starts. Waits one frame before generating habitats to ensure DiffusionGrid is initialized.
         private void Start()
         {
+            GameManager.Instance.OnBackgroundChange += RegenerateHabitats;
             Debug.Log("[HabitatGenerator] Start() called — delaying habitat generation by 1 frame.");
             StartCoroutine(DelayedGenerate());
         }
@@ -32,21 +38,23 @@ namespace Junchen_Edit
         // Waits one frame before running GenerateHabitats()
         private IEnumerator DelayedGenerate()
         {
-            yield return null;
+            yield return new WaitForSeconds(1);
             Debug.Log("[HabitatGenerator] Executing DelayedGenerate()");
-            GenerateHabitats();
+            GenerateHabitats(GameManager.Instance.currentBackground);
         }
 
         // Main entry point for generating habitats
-        public void GenerateHabitats()
+        public void GenerateHabitats(SpriteRenderer sr)
         {
+            background = sr.gameObject;
+            Debug.Log("SPAWING HABITATS ON: " + background.name);
             // Try to fetch the DiffusionGrid reference
             if (diffusionGrid == null)
             {
                 if (background != null)
                     diffusionGrid = background.GetComponent<DiffusionGrid>();
-                else
-                    diffusionGrid = Object.FindFirstObjectByType<DiffusionGrid>();
+                // else
+                    // diffusionGrid = Object.FindFirstObjectByType<DiffusionGrid>();
             }
 
             // Abort if the grid is missing or uninitialized
@@ -187,10 +195,11 @@ namespace Junchen_Edit
         }
 
         // Public method to clear and regenerate habitats
-        public void RegenerateHabitats()
+        public void RegenerateHabitats(SpriteRenderer sr)
         {
+            Debug.Log("REGENERATING HABITATS");
             ClearHabitats();
-            GenerateHabitats();
+            StartCoroutine(DelayedGenerate());
         }
     }
 }
