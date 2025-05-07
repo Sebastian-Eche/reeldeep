@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI fishMetaDataText;
     public TextMeshProUGUI depthText;
     public TextMeshProUGUI caughtFishText;
+    public TextMeshProUGUI habitatHit;
 
     [Header("Game State")]
     public bool minigameStart = false;
@@ -158,6 +159,12 @@ public class GameManager : MonoBehaviour
 
     public void CaughtFishText(){
         caughtFishText.text = "x " + fishCaught.Count;
+    }
+
+    public IEnumerator RemoveDisplay(){
+        yield return new WaitForSeconds(1);
+        habitatHit.gameObject.SetActive(false);
+        habitatHit.text = "CAUGHT";
     }
 
     public void NewBackground(){
