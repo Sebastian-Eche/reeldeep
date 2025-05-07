@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      shallow_sand_bg_0: 3795844062697095764
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -493,6 +493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 619394802}
   - component: {fileID: 619394801}
+  - component: {fileID: 619394803}
   m_Layer: 0
   m_Name: Global Light 2D
   m_TagString: Untagged
@@ -567,6 +568,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &619394803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619394800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f228f42a7901464981b4779e1df4dda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background: {fileID: 2056658452}
+  shallowIntensity: 1
+  midIntensity: 0.5
+  deepIntensity: 0.2
+  transitionSpeed: 3
 --- !u!1 &778065011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,9 +1050,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishPrefabs:
-  - {fileID: 3093679507496630684, guid: 0ada4c534c6288b478781e73beadcbb5, type: 3}
+  - {fileID: 3093679507496630684, guid: fbd6d8d8a11e7a242bc755c8156746cf, type: 3}
   - {fileID: 873726566034587659, guid: 65db1397868bc3b48a92b50455d11b24, type: 3}
-  - {fileID: 8266734584648281515, guid: 9696d2b319bf4a445bf7e00cf1832b4c, type: 3}
+  - {fileID: 8266734584648281515, guid: 3d54a147812a0d445829d2385b777e39, type: 3}
   - {fileID: 1349224579770627370, guid: 49a2622369b6aa54b828edd32f2566ec, type: 3}
   minSpawnTime: 1
   maxSpawnTime: 3
@@ -1132,6 +1150,7 @@ MonoBehaviour:
   goalPosition: {x: 20, y: 66}
   diffusionRate: 0.9
   gridOrigin: {x: -12.9365835, y: -95.86235}
+  sr: {fileID: 0}
 --- !u!212 &2056658454
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1246,16 +1265,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3495510f867e6db4e8f7747ef81bcd75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
+  currentBackground: {fileID: 0}
+  topWaterTexture: {fileID: 0}
+  bottomWaterTexture: {fileID: 0}
   cameraFollowObject: {fileID: 519420033}
   hookControllerObject: {fileID: 1151498011}
   fishMovementObject: {fileID: 0}
-  minigameStart: 0
-  fishOnHook: 0
-  maxAttempts: 2
   returnPoint: {fileID: 1187574545}
   fishSpeciesText: {fileID: 0}
+  fishSprite: {fileID: 0}
   fishMetaDataText: {fileID: 0}
+  depthText: {fileID: 0}
+  caughtFishText: {fileID: 0}
+  habitatHit: {fileID: 0}
+  minigameStart: 0
+  fishOnHook: 0
   isDisplayingInfo: 0
+  fishCaught: []
+  maxAttempts: 2
   attemptsToCatch: 0
 --- !u!1001 &3545088157697784643
 PrefabInstance:
