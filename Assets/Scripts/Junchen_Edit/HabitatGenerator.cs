@@ -20,9 +20,17 @@ namespace Junchen_Edit
         private Dictionary<HabitatInfo.HabitatDepth, List<GameObject>> prefabsByDepth = new();
         private DiffusionGrid diffusionGrid;
 
+        private List<GameObject> spawnedHabitats = new(); // Track spawned habitat instances
+
+        void OnDisable()
+        {
+            GameManager.Instance.OnBackgroundChange -= RegenerateHabitats;
+        }
+
         // Called when the scene starts. Waits one frame before generating habitats to ensure DiffusionGrid is initialized.
         private void Start()
         {
+            GameManager.Instance.OnBackgroundChange += RegenerateHabitats;
             Debug.Log("[HabitatGenerator] Start() called — delaying habitat generation by 1 frame.");
             StartCoroutine(DelayedGenerate());
         }
@@ -30,21 +38,23 @@ namespace Junchen_Edit
         // Waits one frame before running GenerateHabitats()
         private IEnumerator DelayedGenerate()
         {
-            yield return null;
+            yield return new WaitForSeconds(1);
             Debug.Log("[HabitatGenerator] Executing DelayedGenerate()");
-            GenerateHabitats();
+            GenerateHabitats(GameManager.Instance.currentBackground);
         }
 
         // Main entry point for generating habitats
-        public void GenerateHabitats()
+        public void GenerateHabitats(SpriteRenderer sr)
         {
+            background = sr.gameObject;
+            Debug.Log("SPAWING HABITATS ON: " + background.name);
             // Try to fetch the DiffusionGrid reference
             if (diffusionGrid == null)
             {
                 if (background != null)
                     diffusionGrid = background.GetComponent<DiffusionGrid>();
-                else
-                    diffusionGrid = Object.FindFirstObjectByType<DiffusionGrid>();
+                // else
+                    // diffusionGrid = Object.FindFirstObjectByType<DiffusionGrid>();
             }
 
             // Abort if the grid is missing or uninitialized
@@ -62,14 +72,15 @@ namespace Junchen_Edit
             float gridTop = gridBottom + diffusionGrid.height;
             float layerHeight = (gridTop - gridBottom) / 3f;
 
-            float shallowMin = gridBottom;
-            float shallowMax = shallowMin + layerHeight;
+            // Reversed zone order: Shallow is the top third, Deep is the bottom third
+            float deepMin = gridBottom;
+            float deepMax = gridBottom + layerHeight;
 
-            float midMin = shallowMax;
+            float midMin = deepMax;
             float midMax = midMin + layerHeight;
 
-            float deepMin = midMax;
-            float deepMax = gridTop;
+            float shallowMin = midMax;
+            float shallowMax = gridTop;
 
             // Generate for each depth zone
             GenerateForDepth(HabitatInfo.HabitatDepth.Shallow, shallowMin, shallowMax);
@@ -121,6 +132,9 @@ namespace Junchen_Edit
             int maxAttempts = spawnCount * 10;
             int placed = 0;
 
+            HashSet<int> usedX = new(); // Prevent placing on same X axis
+            HashSet<int> usedY = new(); // Prevent placing on same Y axis
+
             while (placed < spawnCount && attempts < maxAttempts)
             {
                 attempts++;
@@ -136,17 +150,56 @@ namespace Junchen_Edit
                 if (diffusionGrid.obstacles[x, y])
                     continue;
 
+                // Reject if this X or Y is already used (prevent axis-aligned alignment)
+                if (usedX.Contains(x) || usedY.Contains(y))
+                    continue;
+
                 // Instantiate a random habitat prefab
                 GameObject prefab = prefabsByDepth[depth][Random.Range(0, prefabsByDepth[depth].Count)];
-                Instantiate(prefab, worldPos, Quaternion.identity);
+                GameObject instance = Instantiate(prefab, worldPos, Quaternion.identity);
+                spawnedHabitats.Add(instance); // Track instance
 
                 // Mark this grid cell as occupied
                 diffusionGrid.obstacles[x, y] = true;
+
+                // Track used axis values
+                usedX.Add(x);
+                usedY.Add(y);
 
                 placed++;
             }
 
             Debug.Log($"[HabitatGenerator] Placed {placed} {depth} habitats.");
+        }
+
+        // Clears all previously spawned habitats and resets the obstacle map
+        public void ClearHabitats()
+        {
+            foreach (var obj in spawnedHabitats)
+            {
+                if (obj != null)
+                    Destroy(obj);
+            }
+            spawnedHabitats.Clear();
+
+            if (diffusionGrid != null && diffusionGrid.obstacles != null)
+            {
+                int width = diffusionGrid.width;
+                int height = diffusionGrid.height;
+                for (int x = 0; x < width; x++)
+                    for (int y = 0; y < height; y++)
+                        diffusionGrid.obstacles[x, y] = false;
+            }
+
+            Debug.Log("[HabitatGenerator] Cleared previous habitats.");
+        }
+
+        // Public method to clear and regenerate habitats
+        public void RegenerateHabitats(SpriteRenderer sr)
+        {
+            Debug.Log("REGENERATING HABITATS");
+            ClearHabitats();
+            StartCoroutine(DelayedGenerate());
         }
     }
 }

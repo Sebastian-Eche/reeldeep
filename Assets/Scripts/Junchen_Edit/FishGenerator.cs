@@ -43,8 +43,6 @@ namespace Junchen_Edit
             { Rarity.Legendary,  new List<GameObject>() },
         };
 
-
-
         void Start()
         {
             GameObject bg = GameObject.Find("Background");
@@ -65,7 +63,7 @@ namespace Junchen_Edit
                 Debug.LogError("[FishGenerator] No GameObject named 'Background' found in the scene.");
             }
 
-            //  Sory the prefabs into their respective lists
+            //  Sort the prefabs into their respective lists
             foreach (var prefab in fishPrefabs)
             {
                 var info = prefab.GetComponent<Fish>().fishInfo;   
@@ -191,9 +189,9 @@ namespace Junchen_Edit
 
             Rarity chosen;
             // Rarity next to (5% legendary, 20% Rare, 30% Uncommon, 45% Common)
-            if (roll < 0.01f)  chosen = Rarity.Legendary; // 1 %
+            if (roll < 0.03f)  chosen = Rarity.Legendary; // 1 %
             else if (roll < 0.21f)  chosen = Rarity.Rare; // +20 %=21
-            else if (roll < 0.55f)  chosen = Rarity.Uncommon; // +34 %=55
+            else if (roll < 0.53f)  chosen = Rarity.Uncommon; // +34 %=55
             else chosen = Rarity.Common;           // 45 %
 
             // If the requested pool is empty (trying to account for errors)

@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 0.89551693, g: 0.9339623, b: 0.876691, a: 1}
+  m_Color: {r: 0.8490566, g: 0.49934337, b: 0.19704515, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -171,6 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHooked: 0
   fishInfo: {fileID: 11400000, guid: cf69ab815fb5b884c8f403c1e27b431c, type: 2}
+  weightInStomach: 0
 --- !u!114 &5735678755200925010
 MonoBehaviour:
   m_ObjectHideFlags: 0

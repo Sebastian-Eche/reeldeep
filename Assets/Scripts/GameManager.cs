@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -140,6 +141,8 @@ public class GameManager : MonoBehaviour
         attemptsToCatch = 0;
         fishCaught = new List<Fish>();
         hookControllerObject.MakeHookBig();
+        String currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
     }
 
     public void IncrementAttempts(){
@@ -173,6 +176,7 @@ public class GameManager : MonoBehaviour
             GameObject backgroundToMove = sprites[spriteNum];
             backgroundToMove.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.bounds.min.y - currentBackground.bounds.extents.y, 0); //(currentBackground.transform.position.y + currentBackground.bounds.min.y) + 1.7f
             backgroundToMove.transform.localScale = spriteScale;
+            backgroundToMove.GetComponent<SpriteRenderer>().sortingOrder = -1;
 
             if (useBottom){
                 bottomWaterTexture.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.bounds.min.y - currentBackground.bounds.extents.y, 0);
