@@ -19,6 +19,12 @@ public class DiffusionGrid : MonoBehaviour
     private Vector3 backgroundScale;
 
     public Vector2 gridOrigin = Vector2.zero; // Grid offset in worldspace
+    public SpriteRenderer sr;
+
+    void OnDisable()
+    {
+        GameManager.Instance.OnBackgroundChange -= ResizeGridToMatchSprite;
+    }
 
     void Start()
     {
@@ -27,7 +33,7 @@ public class DiffusionGrid : MonoBehaviour
 
         Debug.Log($"Background Scale: {backgroundScale}");
 
-        ResizeGridToMatchSprite();
+        ResizeGridToMatchSprite(GameManager.Instance.currentBackground);
 
         // Initial randomization of the goal position (FOR TESTING ONLY)
         RandomizeGoalPosition();
@@ -37,6 +43,8 @@ public class DiffusionGrid : MonoBehaviour
 
         // Generate random obstacles (FOR TESTING ONLY)
         GenerateObstacles();
+
+        GameManager.Instance.OnBackgroundChange += ResizeGridToMatchSprite;
     }
 
     void Update()
@@ -200,11 +208,11 @@ public class DiffusionGrid : MonoBehaviour
     {
     goalPosition = WorldToGrid(worldPos);
     grid[goalPosition.x, goalPosition.y] = 100f;
-    }    
+    }   
 
-    void ResizeGridToMatchSprite()
+    void ResizeGridToMatchSprite(SpriteRenderer newBackground)
     {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr = newBackground;
         if (sr == null)
         {
             Debug.LogWarning("No SpriteRenderer found on this GameObject.");

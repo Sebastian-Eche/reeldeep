@@ -47,7 +47,11 @@ GameObject:
   - component: {fileID: 4538109504449516121}
   - component: {fileID: 5664829661980152870}
   m_Layer: 0
-  m_Name: Rare Fish
+<<<<<<<< HEAD:Assets/Prefabs/Rare Fish 1.prefab
+  m_Name: Rare Fish 1
+========
+  m_Name: Rare Fish_Left
+>>>>>>>> origin/DemoBranch:Assets/Prefabs/Rare Fish_Left.prefab
   m_TagString: Fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,7 +118,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.005754471, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -202,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHooked: 0
   fishInfo: {fileID: 11400000, guid: 2229f87f1d0e3c0438707aa0f3e5e299, type: 2}
+  weightInStomach: 0
 --- !u!114 &4538109504449516121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +240,13 @@ MonoBehaviour:
   swimStyle: 0
   moveSpeed: 3
   head: {fileID: 6047129281320713321}
+<<<<<<<< HEAD:Assets/Prefabs/Rare Fish 1.prefab
+  endPoint: {fileID: 0}
+========
+  endPoint: {fileID: 216284642436504734}
+>>>>>>>> origin/DemoBranch:Assets/Prefabs/Rare Fish_Left.prefab
   diffusionGrid: {fileID: 0}
   currentGridPos: {x: 0, y: 0}
   directionChangeTime: 3
-  behaviorSwitchInterval: 10
+  swimToggleInterval: 2
+  detectionRadius: 5

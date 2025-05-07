@@ -96,6 +96,7 @@ public class Minigame : MonoBehaviour
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
         speedModifier += GameManager.Instance.CurrentFishCapacity();
+        GameManager.Instance.CaughtFishText();
     }
 
     void MoveIndicator(){
@@ -203,6 +204,7 @@ public class Minigame : MonoBehaviour
                 maxFishHitspotSize = 0.13f;
                 break;
         }
+        
         speed += speedModifier;
         maxSpeed += speedModifier;
         Debug.Log(fishCurrHooked.fishInfo.rarity);

@@ -6,7 +6,7 @@ public class SmartFishMovement : MonoBehaviour
     public enum SwimStyle { Random, GoalSeeking, Straight }
     public SwimStyle swimStyle = SwimStyle.Straight; // Starting behavior
 
-    public float moveSpeed = 3f;
+    public float moveSpeed = 4f;
     public Transform head;
     public Transform endPoint;
 
@@ -18,13 +18,13 @@ public class SmartFishMovement : MonoBehaviour
     private float currFishX;
     private float currFishY;
     private float directionChangeTimer;
-    public float directionChangeTime = 3f;
+    public float directionChangeTime = 2f;
 
     private bool isSwimming = true;
     private bool hasReachedGoal = false;
 
     // Timer for switching between straight and random after reaching grid
-    public float swimToggleInterval = 2f;
+    public float swimToggleInterval = 1f;
     private float swimToggleTimer;
     private bool onGrid = false;
 
@@ -43,8 +43,15 @@ public class SmartFishMovement : MonoBehaviour
     private float localWanderInterval = 3f; // change direction every few seconds
 
     //cooldown to reduce jitter in random movement
-    private float moveDecisionCooldown = 0.5f; // how often to decide next tile
+    private float moveDecisionCooldown = 0.0f; // how often to decide next tile
     private float moveDecisionTimer = 0f;
+    
+    private SpriteRenderer sr; // Reference to the fish sprite
+    private Color originalColor; // remember the starting colour
+
+    [SerializeField] private float rotationSpeed = 180f;   // deg/sec
+    [SerializeField] private float angleDeadZone  = 2f;  
+   
 
     private void OnEnable()
     {
@@ -57,7 +64,22 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     private void Start()
-    {
+    {   
+        // Null check for grid
+        if (diffusionGrid == null)
+        {
+            GameObject bg = GameObject.Find("Background");
+            if (bg != null)
+                diffusionGrid = bg.GetComponent<DiffusionGrid>();
+    
+            if (diffusionGrid == null)
+            {
+                Debug.LogWarning("[SmartFishMovement] diffusionGrid is not set. Delaying Start().");
+                return; 
+            }
+        }
+
+
         currFishX = transform.position.x;
         currFishY = transform.position.y;
         directionChangeTimer = directionChangeTime;
@@ -68,10 +90,15 @@ public class SmartFishMovement : MonoBehaviour
 
         Debug.Log($"Target World Position: {targetWorldPosition}");
 
+        // Get fish attribute for switchback in predator interaction
         fish = GetComponent<Fish>();
         originalMoveSpeed = moveSpeed;
+
+        // Get original sprite color on start (for switchback in predator interactions)
+        sr = GetComponent<SpriteRenderer>();
+        if (sr != null) originalColor = sr.color; 
         
-        // if fish is out of bounds start with straight style
+        // if fish is out of bounds start with straight style (Fish spawn offscreen)
          if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y))
         {
             swimStyle = SwimStyle.Straight;
@@ -86,7 +113,7 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   if (diffusionGrid == null) return;
         if (!GameManager.Instance.minigameStart){
             isSwimming = true;
         }
@@ -99,7 +126,7 @@ public class SmartFishMovement : MonoBehaviour
         // if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
 
         // Handle predator-prey detection or tracking
-        if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey)
+        if (fish != null && fish.fishInfo != null && !fish.fishInfo.isPrey && fish.GetWeightInStomach() < fish.fishInfo.maxStomachWeight)
         {
             if (currentTargetPrey == null)
             {
@@ -167,7 +194,7 @@ public class SmartFishMovement : MonoBehaviour
             NewLocalWanderGoal();
         }
 
-        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.05f && moveDecisionTimer <= 0f)
+        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f && moveDecisionTimer <= 0f)
         {
             Vector2Int next = GetNextPositionToward(localWanderGoal);
             if (next != currentGridPos)
@@ -240,11 +267,17 @@ public class SmartFishMovement : MonoBehaviour
                 if (currentTargetPrey != null)
                 {
                     // Despawn the prey and switch back to normal movement patterns
+                    // HERE WE ADD WEIGHT OF TARGET PREY TO PREDATOR
+                    Debug.Log(currentTargetPrey);
+                    if (!fish.fishInfo.isPrey){
+                        fish.AddWeightToStomach(currentTargetPrey.GetWeight());
+                    }
                     Destroy(currentTargetPrey.gameObject); 
                     currentTargetPrey = null;
                     globalTargetPrey = null;
                     moveSpeed = originalMoveSpeed;
                     swimStyle = SwimStyle.Random;
+                    if (sr != null) sr.color = originalColor;
                     Debug.Log("Prey caught and destroyed.");
 
                     // Start moving again
@@ -290,13 +323,22 @@ public class SmartFishMovement : MonoBehaviour
     }
 
     // Smoothly rotate toward the next waypoint
-    void TurnToWaypoint(Vector3 newWaypoint)
-    {
-        Vector3 dir = newWaypoint - head.position;
-        Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward, dir);
-        head.rotation = Quaternion.Slerp(head.rotation, lookRotation, Time.deltaTime * moveSpeed);
-    }
+void TurnToWaypoint(Vector3 newWaypoint)
+{
+    Vector3 dir = newWaypoint - head.position;
+    float   angle = Vector2.SignedAngle(head.up, dir);
 
+    //ignore tiny corrections
+    if (Mathf.Abs(angle) > angleDeadZone)              
+    {
+        Quaternion target = Quaternion.AngleAxis(
+            angle, Vector3.forward) * head.rotation;
+
+        head.rotation = Quaternion.RotateTowards(
+            head.rotation, target, rotationSpeed * Time.deltaTime);
+    }
+}
+ 
     // Get the next best position to move toward based on diffusion values
     Vector2Int GetNextPosition()
     {
@@ -332,6 +374,10 @@ public class SmartFishMovement : MonoBehaviour
     // predator detection and pursuit
     void DetectAndPursuePrey()
     {   
+        // Stop it from activating out of bounds 
+        if (!diffusionGrid.InBounds(currentGridPos.x, currentGridPos.y)) return;
+        if (!onGrid || swimStyle == SwimStyle.Straight) return;  
+        
         // Another predator already has a prey (trying to limit predator and prey interactions)
         if (globalTargetPrey != null) return; 
 
@@ -347,6 +393,7 @@ public class SmartFishMovement : MonoBehaviour
                 swimStyle = SwimStyle.GoalSeeking;
                 hasReachedGoal = false;
                 moveSpeed = originalMoveSpeed + 4f; // Increase speed when pursuing
+                if (sr != null) sr.color = Color.red;
                 Debug.Log($"Predator pursuing prey: {targetFish.fishInfo.fishSpecies}");
                 break;
             }

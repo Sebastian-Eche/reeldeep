@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cadc99f5e0314fb63ae5c11ea34ca, type: 3}
   m_Name: Leopard Shark
   m_EditorClassIdentifier: 
+  rarity: 1
   fishSpecies: Shark
   minWeight: 15
   maxWeight: 40
   minLength: 48
   maxLength: 60
-  rarity: 1
+  maxStomachWeight: 7
   habitat: 
   isPrey: 0
   fishSprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}

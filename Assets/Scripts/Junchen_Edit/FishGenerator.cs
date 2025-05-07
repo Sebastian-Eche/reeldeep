@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Junchen_Edit
-{
+{   using static FishInfo;
     public class FishGenerator : MonoBehaviour 
     {
         [Header("Fish Prefabs")]
@@ -30,8 +30,48 @@ namespace Junchen_Edit
         [Header("Cleanup Settings")]
         public float cleanupOffsetY = 7f; // Vertical offset above camera after which fish will be destroyed
 
+        private DiffusionGrid diffusionGrid; // Reference to the background diffusion grid
+
+
+        // A dictionary of lists for each rarity type
+        private Dictionary<Rarity, List<GameObject>> rarityPools =
+        new Dictionary<Rarity, List<GameObject>>()
+        {
+            { Rarity.Common,     new List<GameObject>() },
+            { Rarity.Uncommon,   new List<GameObject>() },
+            { Rarity.Rare,       new List<GameObject>() },
+            { Rarity.Legendary,  new List<GameObject>() },
+        };
+
+
+
         void Start()
         {
+            GameObject bg = GameObject.Find("Background");
+            if (bg != null)
+            {
+                diffusionGrid = bg.GetComponent<DiffusionGrid>();
+                if (diffusionGrid != null)
+                {
+                StartCoroutine(GenerateFishLoop());
+                }
+                else
+                {
+                    Debug.LogError("[FishGenerator] Background GameObject found, but DiffusionGrid component is missing.");
+                }
+            }
+            else
+            {
+                Debug.LogError("[FishGenerator] No GameObject named 'Background' found in the scene.");
+            }
+
+            //  Sory the prefabs into their respective lists
+            foreach (var prefab in fishPrefabs)
+            {
+                var info = prefab.GetComponent<Fish>().fishInfo;   
+                rarityPools[info.rarity].Add(prefab);
+            }
+
             StartCoroutine(GenerateFishLoop());
         }
 
@@ -63,15 +103,16 @@ namespace Junchen_Edit
 
                 for (int i = 0; i < fishCount; i++)
                 {
-                    GameObject prefab = fishPrefabs[Random.Range(0, fishPrefabs.Count)];
+                    GameObject prefab = GetRandomFishPrefab();
                     Vector3? spawnPos = GetSpawnPositionFromName(prefab.name, usedPositions);
                     if (spawnPos == null) continue;
 
                     GameObject fish = Instantiate(prefab);
                     fish.transform.position = spawnPos.Value;
 
-                    FishMovement instanceFm = fish.GetComponent<FishMovement>();
-                    if (instanceFm.swimStyle == FishMovement.SwimStyle.Straight)
+                    SmartFishMovement instanceFm = fish.GetComponent<SmartFishMovement>();
+                    instanceFm.diffusionGrid = diffusionGrid;
+                    if (instanceFm.swimStyle == SmartFishMovement.SwimStyle.Straight)
                     {
                         Transform wp = fish.transform.GetChild(0);
                         instanceFm.endPoint = wp;
@@ -142,6 +183,35 @@ namespace Junchen_Edit
 
             return null;
         }
+
+        private GameObject GetRandomFishPrefab()
+        {
+            // Roll once per fish 0-1
+            float roll = Random.value;          
+
+            Rarity chosen;
+            // Rarity next to (5% legendary, 20% Rare, 30% Uncommon, 45% Common)
+            if (roll < 0.01f)  chosen = Rarity.Legendary; // 1 %
+            else if (roll < 0.21f)  chosen = Rarity.Rare; // +20 %=21
+            else if (roll < 0.55f)  chosen = Rarity.Uncommon; // +34 %=55
+            else chosen = Rarity.Common;           // 45 %
+
+            // If the requested pool is empty (trying to account for errors)
+            // fall back to the next-rarest category that has entries.
+            while (rarityPools[chosen].Count == 0)
+            {
+                if (chosen == Rarity.Legendary) chosen = Rarity.Rare;
+                else if (chosen == Rarity.Rare) chosen = Rarity.Uncommon;
+                else if (chosen == Rarity.Uncommon) chosen = Rarity.Common;
+                else break;  
+            }
+
+            var pool = rarityPools[chosen];
+
+            // Similar to JC's original logic
+            return pool[Random.Range(0, pool.Count)];
+        }
+
 
         void CleanupFishAboveScreen()
         {
