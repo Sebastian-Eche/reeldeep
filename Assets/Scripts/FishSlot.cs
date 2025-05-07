@@ -20,10 +20,16 @@ public class FishSlot : MonoBehaviour
     }
 
     public void OnClick()
+{
+    Debug.Log($"Slot clicked for: {currentFish.fishSpecies}");
+
+    if (descriptionPanel != null)
     {
-        if (descriptionPanel != null)
-        {
-            descriptionPanel.SetFishInfo(currentFish);
-        }
+        descriptionPanel.SetFishInfo(currentFish);
     }
+    else
+    {
+        Debug.LogWarning("Description panel not assigned!");
+    }
+}
 }
