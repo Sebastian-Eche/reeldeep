@@ -21,9 +21,11 @@ public class Rod : MonoBehaviour
     public void SettingUpHook(){
         hook.transform.position = Vector3.MoveTowards(hook.transform.position, targetPosition.position, 2f * Time.deltaTime);
         hook.transform.localScale = Vector3.Lerp(hook.transform.localScale, Vector3.one, 2f * Time.deltaTime);
+        hook.GetComponent<Collider2D>().enabled = false;
 
         if ((hook.transform.position - targetPosition.transform.position).magnitude <= 0.01){
             hook.GetComponent<HookController>().enabled = true;
+            hook.GetComponent<Collider2D>().enabled = true;
             this.enabled = false;
         }
     }

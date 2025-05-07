@@ -1964,10 +1964,10 @@ MonoBehaviour:
   - {fileID: 3093679507496630684, guid: fbd6d8d8a11e7a242bc755c8156746cf, type: 3}
   - {fileID: 1349224579770627370, guid: 49a2622369b6aa54b828edd32f2566ec, type: 3}
   - {fileID: 8266734584648281515, guid: 3d54a147812a0d445829d2385b777e39, type: 3}
-  minSpawnTime: 3
+  minSpawnTime: 2.5
   maxSpawnTime: 5
   minFishCount: 1
-  maxFishCount: 2
+  maxFishCount: 3
   mainCamera: {fileID: 1522768186}
   sideOffsetX: 3
   bottomOffsetY: 3

@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour
             GameObject backgroundToMove = sprites[spriteNum];
             backgroundToMove.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.bounds.min.y - currentBackground.bounds.extents.y, 0); //(currentBackground.transform.position.y + currentBackground.bounds.min.y) + 1.7f
             backgroundToMove.transform.localScale = spriteScale;
+            backgroundToMove.GetComponent<SpriteRenderer>().sortingOrder = -1;
 
             if (useBottom){
                 bottomWaterTexture.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.bounds.min.y - currentBackground.bounds.extents.y, 0);
