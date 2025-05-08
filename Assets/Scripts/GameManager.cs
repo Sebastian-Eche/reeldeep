@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Doesn't need to be filled in")]
     public SpriteRenderer currentBackground;  // allows access to this variable for diffusion grid don't fill in
-    private int spriteNum;
+    public int spriteNum;
     private Vector3 spriteScale;
     public GameObject topWaterTexture;
     public GameObject bottomWaterTexture;
@@ -47,6 +47,11 @@ public class GameManager : MonoBehaviour
     public int maxAttempts = 2;
     public int attemptsToCatch = 0;
     public event Action OnMaxAttemptsMade;
+
+    void OnDisable()
+    {
+        HookController.OnReturnedBoat -= ReturnedToBoat;
+    }
     void Awake()
     {
         if (Instance == null){
@@ -58,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        HookController.OnReturnedBoat += ReturnedToBoat;
         spriteNum = UnityEngine.Random.Range(0,2);
         Debug.Log("Sprite NUM: " + spriteNum);
         spriteScale = currentBackground.gameObject.transform.localScale;
@@ -94,18 +100,34 @@ public class GameManager : MonoBehaviour
         Debug.Log(fishCaught + " Fish is Caught");
         Debug.Log(fishCaught.Count);
         if(MaxAttmeptsReached()){
-            Debug.Log("Max capacity reached condition TRUE");
-            if(OnMaxAttemptsMade != null){
-                Debug.Log("EVENT TRIGGERED");
-                OnMaxAttemptsMade.Invoke();
-            }else{
-                Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
-            }
+            InvokeMaxAttempts();
+        }
+    }
+
+    public void ReturnedToBoat(){
+        Debug.Log("EVENT RETURNED TO BOAT");
+        attemptsToCatch = 0;
+        spriteNum = UnityEngine.Random.Range(0,2);
+        currentBackground = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+        topWaterTexture.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.transform.position.y, 0);
+        topWaterTexture.transform.localScale = waterTextureScale;
+        useBottom = true;
+        if(OnBackgroundChange != null){
+            OnBackgroundChange.Invoke(currentBackground);
         }
     }
 
     public int CurrentFishCapacity(){
         return fishCaught.Count;
+    }
+
+    public void InvokeMaxAttempts(){
+        if(OnMaxAttemptsMade != null){
+            Debug.Log("EVENT TRIGGERED");
+            OnMaxAttemptsMade.Invoke();
+        }else{
+            Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
+        }
     }
 
     public bool MaxAttmeptsReached(){
@@ -141,8 +163,8 @@ public class GameManager : MonoBehaviour
         attemptsToCatch = 0;
         fishCaught = new List<Fish>();
         hookControllerObject.MakeHookBig();
-        String currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
+        // String currentScene = SceneManager.GetActiveScene().name;
+        // SceneManager.LoadScene(currentScene);
     }
 
     public void IncrementAttempts(){
@@ -154,8 +176,6 @@ public class GameManager : MonoBehaviour
             if(OnMaxAttemptsMade != null){
                 Debug.Log("EVENT TRIGGERED");
                 OnMaxAttemptsMade.Invoke();
-            }else{
-                Debug.Log("EVENT NOT TRIGGERED - EVENT IS NULL");
             }
         }
     }

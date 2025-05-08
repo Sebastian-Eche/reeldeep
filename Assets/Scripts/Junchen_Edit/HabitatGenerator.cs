@@ -38,7 +38,7 @@ namespace Junchen_Edit
         // Waits one frame before running GenerateHabitats()
         private IEnumerator DelayedGenerate()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1.2f);
             Debug.Log("[HabitatGenerator] Executing DelayedGenerate()");
             GenerateHabitats(GameManager.Instance.currentBackground);
         }
