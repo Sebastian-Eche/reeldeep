@@ -22,7 +22,7 @@ public class Minigame : MonoBehaviour
     private bool continueRight = true;
     private int amountOfMinigames = 3;
     private int correctHits = 0;
-    private int missCounter = 0;
+    private int failCounter = 0;
 
     [Header("Minigame Objects")]
     private GameObject indicator;
@@ -41,6 +41,7 @@ public class Minigame : MonoBehaviour
     private void OnDisable()
     {
         Fish.OnFishHooked -= StartMinigame;
+        GameManager.Instance.OnMaxAttemptsMade -= ResetMinigame;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -53,6 +54,7 @@ public class Minigame : MonoBehaviour
         borderMinX = minigameBorder.bounds.min.x + 1.5f;
         borderMaxX = minigameBorder.bounds.max.x - 1;
         maxSpeed = speed + 2;
+        GameManager.Instance.OnMaxAttemptsMade += ResetMinigame;
     }
 
     // Update is called once per frame
@@ -92,7 +94,6 @@ public class Minigame : MonoBehaviour
         GameManager.Instance.EndMinigame();
         fishCurrHooked.gameObject.SetActive(false);
         correctHits = 0;
-        speedModifier += GameManager.Instance.CurrentFishCapacity();
         GameManager.Instance.CaughtFishText();
     }
 
@@ -126,18 +127,25 @@ public class Minigame : MonoBehaviour
                 ++correctHits;
                 ChangeHitSpot();
                 ChangeIndicatorSpeed();
-                missCounter = 0;
             }else{
                 Debug.Log("MISS");
-                missCounter++;
                 MissHelper();
             }
 
+            // FISH CAUGHT OR NOT
             if (correctHits >= amountOfMinigames || !hitSpotHit){
                 caughtFishDisplay.gameObject.SetActive(true);
                 if (!hitSpotHit){
                     caughtFishDisplay.text = "FAILED";
+                    failCounter++;
+                }else{
+                    //FISH CAUGHT
+                    // speedModifier += GameManager.Instance.CurrentFishCapacity();
+                    speedModifier += 2;
+                    failCounter = 0;
                 }
+                Debug.Log("Speed Modifier: " + speedModifier);
+                Debug.Log("Fail Counter: " + failCounter);
                 StartCoroutine(RemoveDisplay());
                 EndMinigame();
             }
@@ -168,9 +176,9 @@ public class Minigame : MonoBehaviour
 
     void MissHelper(){
         Debug.Log("MISS HELPER");
-        if (missCounter % 2 == 0){
-            Debug.Log("helper activated");
-            speed -= 1;
+        Debug.Log("helper activated");
+        if (failCounter % 2 == 0){
+            speedModifier -= 1;
         }
     }
 
@@ -211,6 +219,12 @@ public class Minigame : MonoBehaviour
         yield return new WaitForSeconds(1);
         caughtFishDisplay.gameObject.SetActive(false);
         caughtFishDisplay.text = "CAUGHT";
+    }
+
+    void ResetMinigame(){
+        Debug.Log("Event Invoked: Reset Minigame");
+        speedModifier = 0;
+        failCounter = 0;
     }
 
 }

@@ -16,6 +16,7 @@ public class HookController : MonoBehaviour
     private Transform boatPOS;
     private float returningTimer = 3f;
     private float returnSpeed = 4f;
+    public static event Action OnReturnedBoat;
 
     private void OnDisable()
     {
@@ -114,12 +115,14 @@ public class HookController : MonoBehaviour
 
     bool ReachedBoat(){
         if ((boatPOS.position - transform.position).magnitude < 0.1f){
+            if (OnReturnedBoat != null){
+                OnReturnedBoat.Invoke();
+            }
             returningTimer = 3f;
             isReturning = false;
             returnSpeed = 4f;
             startingY = boatPOS.position.y;
             gameObject.GetComponent<Collider2D>().enabled = true;
-            GameManager.Instance.attemptsToCatch = 0;
             return true;
         }
         return false;
@@ -152,6 +155,9 @@ public class HookController : MonoBehaviour
             GameManager.Instance.attemptsToCatch++;
             Destroy(other.gameObject);
             GameManager.Instance.ReturningToBoat();
+            if (GameManager.Instance.MaxAttmeptsReached()){
+                GameManager.Instance.InvokeMaxAttempts();
+            }
         }
         Debug.Log(GameManager.Instance.attemptsToCatch);
     }
