@@ -241,7 +241,7 @@ public class DiffusionGrid : MonoBehaviour
     }
 
     IEnumerator DoDelayToResizeGridToMatchSprite(SpriteRenderer newBackground){
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSecondsRealtime(1);
         ResizeGridToMatchSprite(newBackground);
 
     }

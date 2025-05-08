@@ -109,6 +109,8 @@ public class GameManager : MonoBehaviour
         attemptsToCatch = 0;
         spriteNum = UnityEngine.Random.Range(0,2);
         currentBackground = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+        topWaterTexture.transform.position = new Vector3(currentBackground.transform.position.x, currentBackground.transform.position.y, 0);
+        topWaterTexture.transform.localScale = waterTextureScale;
         useBottom = true;
         if(OnBackgroundChange != null){
             OnBackgroundChange.Invoke(currentBackground);
