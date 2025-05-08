@@ -16,6 +16,7 @@ public class HookController : MonoBehaviour
     private Transform boatPOS;
     private float returningTimer = 3f;
     private float returnSpeed = 4f;
+    public static event Action OnReturnedBoat;
 
     private void OnDisable()
     {
@@ -100,16 +101,23 @@ public class HookController : MonoBehaviour
     void Returning(){
         if (returningTimer <= 0) {
             returnSpeed += 5f * Time.deltaTime;
-            Debug.Log("Retunr Speed: " + returnSpeed);
         }
         returningTimer -= Time.deltaTime;
         float step = returnSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, boatPOS.position, step);
         gameObject.GetComponent<Collider2D>().enabled = false;
+
+        if ((boatPOS.position - transform.position).magnitude < 25f){
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, 2f * Time.deltaTime);
+        }
+
     }
 
     bool ReachedBoat(){
         if ((boatPOS.position - transform.position).magnitude < 0.1f){
+            if (OnReturnedBoat != null){
+                OnReturnedBoat.Invoke();
+            }
             returningTimer = 3f;
             isReturning = false;
             returnSpeed = 4f;
@@ -119,6 +127,10 @@ public class HookController : MonoBehaviour
         }
         return false;
     }
+
+    public void MakeHookBig(){
+        transform.localScale = Vector3.one;
+    } 
 
     IEnumerator SkipNearReturnPoint(){
         yield return new WaitForSeconds(3);
@@ -136,5 +148,17 @@ public class HookController : MonoBehaviour
                 GameManager.Instance.fishOnHook = true;
             }
         }
+        if (other.gameObject.CompareTag("Habitats")){
+            GameManager.Instance.habitatHit.gameObject.SetActive(true);
+            GameManager.Instance.habitatHit.text = "-1 ATTEMPTS";
+            StartCoroutine(GameManager.Instance.RemoveDisplay());
+            GameManager.Instance.attemptsToCatch++;
+            Destroy(other.gameObject);
+            GameManager.Instance.ReturningToBoat();
+            if (GameManager.Instance.MaxAttmeptsReached()){
+                GameManager.Instance.InvokeMaxAttempts();
+            }
+        }
+        Debug.Log(GameManager.Instance.attemptsToCatch);
     }
 }

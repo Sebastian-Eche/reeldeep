@@ -18,6 +18,7 @@ MonoBehaviour:
   maxWeight: 17
   minLength: 22
   maxLength: 25
+  maxStomachWeight: 3
   habitat: 
   isPrey: 0
-  fishSprite: {fileID: 0}
+  fishSprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}

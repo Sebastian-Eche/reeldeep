@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8173653927629896263}
   - component: {fileID: 831489283467484651}
   - component: {fileID: 847490154530302451}
+  - component: {fileID: 4671660515649593626}
   m_Layer: 0
   m_Name: Uncommon_Random
   m_TagString: Fish
@@ -113,7 +114,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.26907083, g: 0.83396226, b: 0.3188974, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -201,6 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHooked: 0
   fishInfo: {fileID: 11400000, guid: b941c101bd36d0e40a85d17dd1ebf234, type: 2}
+  weightInStomach: 0
 --- !u!114 &847490154530302451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +210,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8266734584648281515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -219,3 +221,24 @@ MonoBehaviour:
   head: {fileID: 7570194552986552725}
   moveSpeed: 6
   directionChangeTime: 3
+--- !u!114 &4671660515649593626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266734584648281515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923a9e102571246d18fb29a234db9395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swimStyle: 0
+  moveSpeed: 3
+  head: {fileID: 7570194552986552725}
+  endPoint: {fileID: 2243242621498904481}
+  diffusionGrid: {fileID: 0}
+  currentGridPos: {x: 0, y: 0}
+  directionChangeTime: 3
+  swimToggleInterval: 2
+  detectionRadius: 5

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4304212331019305596}
   - component: {fileID: 6516581585227651075}
   - component: {fileID: 1087609128306296257}
+  - component: {fileID: 3245988059172305380}
   m_Layer: 0
   m_Name: Cabezon_Random
   m_TagString: Fish
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8509804, g: 0.49803922, b: 0.19607843, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -169,7 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHooked: 0
-  fishInfo: {fileID: 11400000, guid: cf69ab815fb5b884c8f403c1e27b431c, type: 2}
+  fishInfo: {fileID: 11400000, guid: 99a90ed18f01e87418bee7528270c245, type: 2}
+  weightInStomach: 0
 --- !u!114 &1087609128306296257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +179,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3093679507496630684}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -188,6 +190,29 @@ MonoBehaviour:
   head: {fileID: 6125316673517719657}
   moveSpeed: 2.4
   directionChangeTime: 3
+--- !u!114 &3245988059172305380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093679507496630684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923a9e102571246d18fb29a234db9395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swimStyle: 0
+  moveSpeed: 3
+  head: {fileID: 6125316673517719657}
+  endPoint: {fileID: 0}
+  diffusionGrid: {fileID: 0}
+  currentGridPos: {x: 0, y: 0}
+  directionChangeTime: 3
+  swimToggleInterval: 2
+  detectionRadius: 5
+  rotationSpeed: 180
+  angleDeadZone: 2
 --- !u!1 &4972441437434329351
 GameObject:
   m_ObjectHideFlags: 0

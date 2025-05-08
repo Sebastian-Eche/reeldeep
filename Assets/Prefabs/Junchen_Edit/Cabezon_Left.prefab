@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1762588410107848454}
   - component: {fileID: 7338850598254407129}
   - component: {fileID: 5735678755200925010}
+  - component: {fileID: 5168124638718945904}
   m_Layer: 0
   m_Name: Cabezon_Left
   m_TagString: Fish
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 1ed7225543a132b40a76b42bf8294a54, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8490566, g: 0.49934337, b: 0.19704515, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -163,13 +164,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873726566034587659}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 553c993c658d1dd46af719392bbcdec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHooked: 0
   fishInfo: {fileID: 11400000, guid: cf69ab815fb5b884c8f403c1e27b431c, type: 2}
+  weightInStomach: 0
 --- !u!114 &5735678755200925010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +179,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873726566034587659}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38045dacb1cf03e4386b0baf42ebebd2, type: 3}
   m_Name: 
@@ -188,6 +190,29 @@ MonoBehaviour:
   head: {fileID: 4792637543238007620}
   moveSpeed: 4
   directionChangeTime: 3
+--- !u!114 &5168124638718945904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873726566034587659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923a9e102571246d18fb29a234db9395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swimStyle: 2
+  moveSpeed: 4
+  head: {fileID: 4792637543238007620}
+  endPoint: {fileID: 8063441913243140849}
+  diffusionGrid: {fileID: 0}
+  currentGridPos: {x: 0, y: 0}
+  directionChangeTime: 3
+  swimToggleInterval: 2
+  detectionRadius: 5
+  rotationSpeed: 180
+  angleDeadZone: 2
 --- !u!1 &9139833805881995085
 GameObject:
   m_ObjectHideFlags: 0
