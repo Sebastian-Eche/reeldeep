@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a867513f5eb33f489d4caa283861dfd, type: 3}
+  m_Name: KelpInfo
+  m_EditorClassIdentifier: 
+  habitatName: Kelp Forest
+  depthZone: 1
+  icon: {fileID: 0}
+  description: 'Kelp forests are tall seaweed structures rooted to the seafloor,
+    offering shelter and food for marine creatures in nutrient-rich mid-depth zones.
+
+'
