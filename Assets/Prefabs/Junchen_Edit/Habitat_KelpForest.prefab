@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3635466650194598071
+--- !u!1 &322065485603657626
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4860202769441113940}
-  - component: {fileID: 3790517288631573536}
-  - component: {fileID: 4845620039077278740}
-  - component: {fileID: 8734443377505359715}
-  - component: {fileID: 8899835886844821705}
+  - component: {fileID: 5346790281365528914}
+  - component: {fileID: 8383043086942136658}
+  - component: {fileID: 7166575481921183843}
+  - component: {fileID: 9156731180907882679}
+  - component: {fileID: 6387061789909920020}
   m_Layer: 0
-  m_Name: 'Habitat_Sponge '
+  m_Name: Habitat_KelpForest
   m_TagString: Habitats
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4860202769441113940
+--- !u!4 &5346790281365528914
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635466650194598071}
+  m_GameObject: {fileID: 322065485603657626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20, y: -5, z: 0}
+  m_LocalPosition: {x: -28.7, y: -4.1000004, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3790517288631573536
+--- !u!212 &8383043086942136658
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635466650194598071}
+  m_GameObject: {fileID: 322065485603657626}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -79,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 524141632, guid: 5218daece957f764b968105616ab7bfd, type: 3}
-  m_Color: {r: 1, g: 0.73484355, b: 0, a: 1}
+  m_Sprite: {fileID: -1242622739, guid: 5218daece957f764b968105616ab7bfd, type: 3}
+  m_Color: {r: 1, g: 0.38171852, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -90,26 +90,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4845620039077278740
+--- !u!114 &7166575481921183843
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635466650194598071}
+  m_GameObject: {fileID: 322065485603657626}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4208395b2f6e73344945a5283c855274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  habitatInfo: {fileID: 11400000, guid: b4015ce247d22224894b0969d6c57162, type: 2}
---- !u!61 &8734443377505359715
+  habitatInfo: {fileID: 11400000, guid: d93a849ffe5e7cf4789ceccc40da4600, type: 2}
+--- !u!61 &9156731180907882679
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635466650194598071}
+  m_GameObject: {fileID: 322065485603657626}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -139,9 +139,9 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 2.703125, z: 0.65625, w: 0.984375}
-    pivot: {x: 0.42949888, y: 0.60773313}
-    oldSize: {x: 4.765625, y: 8}
+    border: {x: 0.890625, y: 2.6875, z: 0.703125, w: 0.5625}
+    pivot: {x: 0.5356417, y: 0.62964493}
+    oldSize: {x: 5.328125, y: 8}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -149,14 +149,14 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &8899835886844821705
+--- !u!50 &6387061789909920020
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635466650194598071}
+  m_GameObject: {fileID: 322065485603657626}
   m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
